@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mediaid/design_system/color/neutral_color.dart';
 import 'package:mediaid/design_system/input_field/text_input.dart';
 import '../../../components/registerElectronicRecords/tabItem_MedicalInformation.dart';
 import '../../../design_system/color/primary_color.dart';
