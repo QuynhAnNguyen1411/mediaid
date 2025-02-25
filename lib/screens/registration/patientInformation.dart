@@ -7,7 +7,7 @@ import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/design_system/input_field/text_input.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/design_system/selection/radio_button.dart';
-import 'package:mediaid/screens/registration/basicMedicalInformation/MedicalHistory.dart';
+import 'package:mediaid/screens/registration/basicMedicalInformation/medicalHistory.dart';
 
 
 final formatter = DateFormat.yMd();
