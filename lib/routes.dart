@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mediaid/screens/electronicHealthRecord/basicMedicalInformation/allergyHistory.dart';
 import 'package:mediaid/screens/registration/patientInformation.dart';
-import 'screens/registration/basicMedicalInformation/allergyHistory.dart';
-import 'screens/registration/basicMedicalInformation/medicalHistory.dart';
-import 'screens/splash/Splash.dart';
+import 'screens/electronicHealthRecord/basicMedicalInformation/medicalHistory.dart';
+import 'screens/splash/splash.dart';
 
 class MediaidRoutes {
   static const String splash = '/splash';

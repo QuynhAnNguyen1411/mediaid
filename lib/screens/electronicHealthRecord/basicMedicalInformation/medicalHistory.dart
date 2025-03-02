@@ -16,7 +16,7 @@ class MedicalHistory extends StatefulWidget {
 
 class _MedicalHistoryState extends State<MedicalHistory>
     with SingleTickerProviderStateMixin {
-  bool isExpandedMedicalHistory = false; // Trạng thái của container (hiện hay ẩn)
+  bool isExpandedMedicalHistory = false;
   bool isExpandedFamilyHistory = false;
 
   bool isChecked = false;
@@ -98,10 +98,10 @@ class _MedicalHistoryState extends State<MedicalHistory>
                 width: double.infinity,
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  border: Border.all(color: PrimaryColor.primary_10, width: 1), // Đường viền của container
+                  border: Border.all(color: PrimaryColor.primary_10, width: 1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                height: 600, // Giới hạn chiều cao của container
+                height: 500,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +115,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
                               top: 12,
                               right: 8,
                               child: IconButton(
-                                icon: Icon(Icons.close, color: StatusColor.errorFull), // Thay đổi màu sắc của nút "X"
+                                icon: Icon(Icons.close, color: StatusColor.errorFull),
                                 onPressed: () {
                                   setState(() {
                                     // Xóa form khỏi danh sách
@@ -155,8 +155,8 @@ class _MedicalHistoryState extends State<MedicalHistory>
           ),
           const SizedBox(height: 20),
           Visibility(
-            visible: familyHistoryForms.isNotEmpty, // Kiểm tra khi có form trong danh sách
-            child: Scrollbar(  // Đặt Scrollbar bao quanh toàn bộ container
+            visible: familyHistoryForms.isNotEmpty,
+            child: Scrollbar(
               child: Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(16),
@@ -164,7 +164,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
                   border: Border.all(color: PrimaryColor.primary_10, width: 1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                height: 600, // Giới hạn chiều cao của container
+                height: 500,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,11 +225,11 @@ class _MedicalHistoryState extends State<MedicalHistory>
               Expanded(
                   child: CustomTextInput(
                 label: 'Năm phát hiện',
-                type: TextFieldType.textIconRight,
+                type: TextFieldType.text,
                 state: TextFieldState.defaultState,
-                hintText: 'Chọn năm',
+                hintText: 'Điền năm',
                 controller: yearOfDiagnosisController,
-                icon: Icons.arrow_drop_down_sharp,
+                keyboardType: TextInputType.multiline,
               )),
               const SizedBox(width: 20),
               Expanded(
@@ -306,11 +306,11 @@ class _MedicalHistoryState extends State<MedicalHistory>
             const SizedBox(height: 16),
             CustomTextInput(
               label: 'Thành viên trong gia đình mắc bệnh',
-              type: TextFieldType.textIconRight,
+              type: TextFieldType.text,
               state: TextFieldState.defaultState,
-              hintText: 'Chọn mối quan hệ',
+              hintText: 'Điền mối quan hệ',
               controller: relationshipFMController,
-              icon: Icons.arrow_drop_down_sharp,
+              keyboardType: TextInputType.multiline,
             ),
             const SizedBox(height: 16),
             Row(
@@ -318,11 +318,11 @@ class _MedicalHistoryState extends State<MedicalHistory>
                 Expanded(
                   child: CustomTextInput(
                     label: 'Năm phát hiện - Thành viên gia đình',
-                    type: TextFieldType.textIconRight,
+                    type: TextFieldType.text,
                     state: TextFieldState.defaultState,
-                    hintText: 'Chọn năm phát hiện',
+                    hintText: 'Điền năm',
                     controller: yearOfDiseaseFMController,
-                    icon: Icons.arrow_drop_down_sharp,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
                 const SizedBox(width: 20),

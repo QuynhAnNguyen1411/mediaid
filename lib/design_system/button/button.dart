@@ -40,7 +40,7 @@ class CustomButton extends StatelessWidget {
     Widget buttonChild = _buildButtonChild(textColor);
 
     if (isDisabled) {
-      return _buildDisabledButton(_buildButtonChild(NeutralColor.neutral_06));  // Create new button child with correct color
+      return _buildDisabledButton(_buildButtonChild(NeutralColor.neutral_06));
     }
 
     switch (state) {

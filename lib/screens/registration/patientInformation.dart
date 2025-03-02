@@ -7,8 +7,12 @@ import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/design_system/input_field/text_input.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/design_system/selection/radio_button.dart';
-import 'package:mediaid/screens/registration/basicMedicalInformation/medicalHistory.dart';
+import 'package:mediaid/screens/electronicHealthRecord/basicMedicalInformation/medicalHistory.dart';
 
+import '../../api/register_w_login/registration_api.dart';
+import '../../design_system/color/neutral_color.dart';
+import '../../models/gender.dart';
+import '../../models/nation.dart';
 
 final formatter = DateFormat.yMd();
 
@@ -21,9 +25,8 @@ class PatientInformation extends StatefulWidget {
   }
 }
 
-
 class _PatientInformationState extends State<PatientInformation> {
-  // đưa vô trong để tránh tạo final biến toàn cục bên ngoài State
+  // Controller bệnh nhân
   final TextEditingController personalIdentifierController = TextEditingController();
   final TextEditingController healthInsuranceController = TextEditingController();
   final TextEditingController patientNameController = TextEditingController();
@@ -31,8 +34,14 @@ class _PatientInformationState extends State<PatientInformation> {
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailPatientController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
-  final TextEditingController nationPatientController = TextEditingController();
   final TextEditingController sexPatientController = TextEditingController();
+
+  // Controller người nhà bệnh nhân
+  final TextEditingController patientFamilyNameController = TextEditingController();
+  final TextEditingController patientRelationshipController = TextEditingController();
+  final TextEditingController patientFamilyIdentifierController = TextEditingController();
+  final TextEditingController patientFamilyPhoneNumberController = TextEditingController();
+
 
   DateTime? _selectedDate;
   String? selectedRadio;
@@ -44,6 +53,12 @@ class _PatientInformationState extends State<PatientInformation> {
   bool isPhoneNumberValid = true;
   String? phoneNumberError;
 
+  //Dropdown
+  String? _selectedGender;
+  List<Gender> genders = [];
+
+  List<Nation> nations = [];
+  String? _selectedNation;
 
   // FocusNodes để theo dõi khi rời khỏi ô nhập liệu
   // Thay vì final, chọn late để tránh tạo null ban đầu
@@ -84,6 +99,22 @@ class _PatientInformationState extends State<PatientInformation> {
     }
   }
 
+  // Tải dữ liệu dân tộc
+  Future<void> _loadEthnicities() async {
+    List<Nation> nationList = await getNation();
+    setState(() {
+      nations = nationList; // Cập nhật danh sách dân tộc
+    });
+  }
+
+  // Tải dữ liệu dân tộc
+  Future<void> _loadGender() async {
+    List<Gender> genderList = await getGender(); // Lấy dữ liệu giới tính
+    setState(() {
+      genders = genderList; // Cập nhật danh sách giới tính
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +137,9 @@ class _PatientInformationState extends State<PatientInformation> {
     dobController.addListener(_validateForm);
     addressPatientController.addListener(_validateForm);
     phoneNumberController.addListener(_validateForm);
+
+    _loadEthnicities();
+    _loadGender();
   }
 
   @override
@@ -126,8 +160,10 @@ class _PatientInformationState extends State<PatientInformation> {
 
   void _validateForm() {
     setState(() {
-      isPersonalIDValid = _validatePersonalID(personalIdentifierController.text);
-      isHealthInsuranceValid = _validateHealthInsurance(healthInsuranceController.text);
+      isPersonalIDValid =
+          _validatePersonalID(personalIdentifierController.text);
+      isHealthInsuranceValid =
+          _validateHealthInsurance(healthInsuranceController.text);
       isPhoneNumberValid = _validatePhoneNumber(phoneNumberController.text);
 
       isFormValid = isPersonalIDValid &&
@@ -168,7 +204,6 @@ class _PatientInformationState extends State<PatientInformation> {
     phoneNumberError = null;
     return true;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +283,9 @@ class _PatientInformationState extends State<PatientInformation> {
                 label: 'Số CCCD/CMT',
                 isRequired: true,
                 type: TextFieldType.text,
-                state: isPersonalIDValid ? TextFieldState.defaultState : TextFieldState.error,
+                state: isPersonalIDValid
+                    ? TextFieldState.defaultState
+                    : TextFieldState.error,
                 hintText: 'Điền số CCCD/CMT',
                 controller: personalIdentifierController,
                 keyboardType: TextInputType.number,
@@ -256,7 +293,8 @@ class _PatientInformationState extends State<PatientInformation> {
                   FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(12),
                 ],
-                errorMessage: personalIDError, // Hiển thị lỗi khi nhập chưa đủ 12 số
+                errorMessage:
+                    personalIDError, // Hiển thị lỗi khi nhập chưa đủ 12 số
               ),
 
               const SizedBox(height: 16),
@@ -265,7 +303,9 @@ class _PatientInformationState extends State<PatientInformation> {
                 label: 'Số thẻ BHYT',
                 isRequired: selectedRadio == null,
                 type: TextFieldType.text,
-                state: isHealthInsuranceValid ? TextFieldState.defaultState : TextFieldState.error,
+                state: isHealthInsuranceValid
+                    ? TextFieldState.defaultState
+                    : TextFieldState.error,
                 hintText: 'Điền số thẻ BHYT',
                 controller: healthInsuranceController,
                 keyboardType: TextInputType.number,
@@ -294,7 +334,7 @@ class _PatientInformationState extends State<PatientInformation> {
                       });
                     },
                   ),
-                  const SizedBox( height: 12),
+                  const SizedBox(height: 12),
                   CustomRadioButton(
                     isSelected: selectedRadio == 'option2',
                     isDisabled: false,
@@ -307,7 +347,7 @@ class _PatientInformationState extends State<PatientInformation> {
                       });
                     },
                   ),
-                  const SizedBox( height: 12),
+                  const SizedBox(height: 12),
                   CustomRadioButton(
                     isSelected: selectedRadio == 'option3',
                     isDisabled: false,
@@ -321,7 +361,6 @@ class _PatientInformationState extends State<PatientInformation> {
                   ),
                 ],
               ),
-
 
               const SizedBox(height: 16),
               // Tên bệnh nhân
@@ -343,8 +382,10 @@ class _PatientInformationState extends State<PatientInformation> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: _presentDatePicker, // Gọi DatePicker khi nhấn vào ô nhập
-                      child: AbsorbPointer( // Ngăn người dùng nhập tay
+                      onTap: _presentDatePicker,
+                      // Gọi DatePicker khi nhấn vào ô nhập
+                      child: AbsorbPointer(
+                        // Ngăn người dùng nhập tay
                         child: CustomTextInput(
                           type: TextFieldType.textIconRight,
                           state: TextFieldState.defaultState,
@@ -359,28 +400,113 @@ class _PatientInformationState extends State<PatientInformation> {
                   ),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: CustomTextInput(
-                      label: "Giới tính",
-                      type: TextFieldType.textIconRight,
-                      state: TextFieldState.defaultState,
-                      hintText: "Chọn giới tính",
-                      controller: sexPatientController,
-                      icon: Icons.arrow_drop_down_sharp,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Giới tính',
+                            style: TextStyleCustom.heading_3b
+                                .copyWith(color: PrimaryColor.primary_10)),
+                        const SizedBox(height: 8),
+                        DropdownButtonFormField<String>(
+                          value: _selectedGender,
+                          hint: Text('Chọn giới tính', style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06)),
+                          isExpanded: false,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: NeutralColor.neutral_04,
+                                width: 1.5,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: NeutralColor.neutral_04,
+                                width: 1.5,
+                              ),
+                            ),
+                          ),
+                          dropdownColor: PrimaryColor.primary_00,
+                          items: genders.map((gender) {
+                            return DropdownMenuItem<String>(
+                                value: gender.gender,
+                                child: Text(
+                                  gender.gender,
+                                  style: TextStyleCustom.bodySmall
+                                      .copyWith(color: PrimaryColor.primary_10),
+                                ));
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   )
                 ],
               ),
-              const SizedBox(height: 16),
-              // Dân tộc
-              CustomTextInput(
-                label: "Dân tộc",
-                type: TextFieldType.textIconRight,
-                state: TextFieldState.defaultState,
-                hintText: "Chọn dân tộc",
-                controller: nationPatientController,
-                icon: Icons.arrow_drop_down_sharp,
+              Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Dân tộc',
+                        style: TextStyleCustom.heading_3b
+                            .copyWith(color: PrimaryColor.primary_10)),
+                    const SizedBox(height: 8),
+                    // Dropdown Button
+                    DropdownButtonFormField(
+                      value: _selectedNation,
+                      hint: Text(
+                        'Chọn dân tộc',
+                        style: TextStyleCustom.bodySmall.copyWith(
+                          color: NeutralColor.neutral_06,
+                        ),
+                      ),
+                      isExpanded: false,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: NeutralColor.neutral_04,
+                            width: 1.5,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: NeutralColor.neutral_04,
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                      dropdownColor: PrimaryColor.primary_00,
+                      items: nations.map((nation) {
+                        return DropdownMenuItem<String>(
+                          value: nation.id,
+                          child: Text(
+                            nation.name,
+                            style: TextStyleCustom.bodySmall
+                                .copyWith(color: PrimaryColor.primary_10),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedNation = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 16),
               // Địa chỉ cư trú
               CustomTextInput(
                 label: 'Địa chỉ cư trú',
@@ -397,7 +523,9 @@ class _PatientInformationState extends State<PatientInformation> {
                 label: 'Số điện thoại',
                 isRequired: true,
                 type: TextFieldType.text,
-                state: isPhoneNumberValid ? TextFieldState.defaultState : TextFieldState.error,
+                state: isPhoneNumberValid
+                    ? TextFieldState.defaultState
+                    : TextFieldState.error,
                 hintText: 'Điền đầy đủ số điện thoại',
                 controller: phoneNumberController,
                 keyboardType: TextInputType.number,
@@ -418,22 +546,80 @@ class _PatientInformationState extends State<PatientInformation> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
+              Text(
+                'Thông tin người nhà bệnh nhân / người giám hộ',
+                style: TextStyleCustom.heading_3a
+                    .copyWith(color: PrimaryColor.primary_10),
+              ),
+              const SizedBox(height: 16),
+              CustomTextInput(
+                label: 'Họ tên người nhà bệnh nhân / người giám hộ',
+                isRequired: false,
+                type: TextFieldType.text,
+                state: TextFieldState.defaultState,
+                hintText: 'Điền họ tên người nhà bệnh nhân / người giám hộ',
+                controller: patientFamilyNameController,
+                keyboardType: TextInputType.multiline,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ỹ\s]')),
+                ],
+              ),
+              const SizedBox(height: 16),
+              CustomTextInput(
+                label: 'Mối quan hệ với bệnh nhân',
+                isRequired: false,
+                type: TextFieldType.text,
+                state: TextFieldState.defaultState,
+                hintText: 'Điền mối quan hệ với bệnh nhân',
+                controller: patientRelationshipController,
+                keyboardType: TextInputType.multiline,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ỹ\s]')),
+                ],
+              ),
+              const SizedBox(height: 16),
+              CustomTextInput(
+                label: 'Số CCCD / CMT',
+                isRequired: false,
+                type: TextFieldType.text,
+                state: TextFieldState.defaultState,
+                hintText: 'Điền số CCCD/CMT người nhà bệnh nhân',
+                controller: patientFamilyIdentifierController,
+                keyboardType: TextInputType.multiline,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ỹ\s]')),
+                ],
+              ),
+              const SizedBox(height: 16),
+              CustomTextInput(
+                label: 'Số điện thoại',
+                isRequired: false,
+                type: TextFieldType.text,
+                state: TextFieldState.defaultState,
+                hintText: 'Điền số điện thoại người nhà bệnh nhân',
+                controller: patientFamilyPhoneNumberController,
+                keyboardType: TextInputType.multiline,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ỹ\s]')),
+                ],
+              ),
+              const SizedBox(height: 16),
               CustomButton(
                 type: ButtonType.standard,
                 state: isFormValid ? ButtonState.fill1 : ButtonState.disabled,
                 text: "Tiếp tục",
                 width: double.infinity,
                 height: 50,
-                onPressed: isFormValid ? () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MedicalHistory()),
-                  );
-                } : null,
+                onPressed: isFormValid
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MedicalHistory()),
+                        );
+                      }
+                    : null,
               ),
-
-
-
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -448,7 +634,7 @@ class _PatientInformationState extends State<PatientInformation> {
                     text: "Đăng nhập ngay",
                     width: 100,
                     height: 50,
-                    onPressed: (){},
+                    onPressed: () {},
                   )
                 ],
               ),
