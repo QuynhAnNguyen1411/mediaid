@@ -38,6 +38,7 @@ dependencies:
   uuid: ^4.4.2
   intl: ^0.20.2
   http: ^1.3.0
+  flutter_svg: ^2.0.17
 
 
 dev_dependencies:
@@ -68,6 +69,28 @@ flutter:
     - assets/images/registration/vietnam_flag.jpg
     - assets/images/splash/male_doctor_medical_facility.jpg
     - assets/images/splash/female_doctor_navigation_survey.jpg
+    - assets/images/log_in/doctor_log_in.jpg
+    - assets/icons/home/cancer_screening.svg
+    - assets/icons/home/disease_conclusion.svg
+    - assets/icons/home/register_for_examination.svg
+    - assets/icons/bottom_nav_bar/archive.svg
+    - assets/icons/bottom_nav_bar/chat.svg
+    - assets/icons/bottom_nav_bar/home.svg
+    - assets/icons/bottom_nav_bar/medical-records.svg
+    - assets/icons/bottom_nav_bar/user.svg
+    - assets/icons/registration/disabled_people.svg
+    - assets/icons/registration/elderly_people.svg
+    - assets/icons/registration/people_over_14_years_old.svg
+    - assets/icons/registration/people_under_14_years_old.svg
+    - assets/icons/electronicHealthRecord/medical_history.svg
+    - assets/icons/electronicHealthRecord/drug_history.svg
+    - assets/icons/electronicHealthRecord/lifestyle.svg
+    - assets/icons/home/hospital.svg
+    - assets/icons/home/doctor.svg
+    - assets/icons/home/calendar.svg
+    - assets/icons/electronicHealthRecord/notes.svg
+    - assets/images/registration/success_dialog.jpg
+
 
   fonts:
     - family: Quicksand

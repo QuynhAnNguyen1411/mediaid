@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mediaid/design_system/color/status_color.dart';
 import 'package:mediaid/design_system/input_field/text_input.dart';
-import '../../../design_system/button/button.dart';
-import '../../../design_system/color/primary_color.dart';
-import '../../../design_system/textstyle/textstyle.dart';
+import '../../../../design_system/button/button.dart';
+import '../../../../design_system/color/primary_color.dart';
+import '../../../../design_system/textstyle/textstyle.dart';
 
 class MedicalHistory extends StatefulWidget {
   const MedicalHistory({super.key});
@@ -45,7 +45,6 @@ class _MedicalHistoryState extends State<MedicalHistory>
       TextEditingController();
   final TextEditingController noteDiseaseFMController = TextEditingController();
 
-
   // Danh sách chứa các form nhập liệu
   List<Widget> medicalHistoryForms = [];
   List<Widget> familyHistoryForms = [];
@@ -66,6 +65,8 @@ class _MedicalHistoryState extends State<MedicalHistory>
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,22 +78,22 @@ class _MedicalHistoryState extends State<MedicalHistory>
             trailing: CustomButton(
               type: ButtonType.iconOnly,
               state: ButtonState.text,
-              width: 48,
-              height: 48,
+              width: screenWidth * 0.1,
+              height: screenHeight * 0.05,
               icon: Icons.add_circle_outline_rounded,
               onPressed: _toggleMedicalHistory,
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: EdgeInsets.only(top: screenHeight * 0.001),
             child: Text(
               'Ghi chú: Bỏ qua nếu không có',
               style: TextStyleCustom.caption,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: screenHeight * 0.03),
           Visibility(
-            visible:  medicalHistoryForms.isNotEmpty,
+            visible: medicalHistoryForms.isNotEmpty,
             child: Scrollbar(
               child: Container(
                 width: double.infinity,
@@ -101,21 +102,22 @@ class _MedicalHistoryState extends State<MedicalHistory>
                   border: Border.all(color: PrimaryColor.primary_10, width: 1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                height: 500,
+                height: screenHeight * 0.6,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: medicalHistoryForms.map((form) {
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: EdgeInsets.only(bottom: screenHeight * 0.02),
                         child: Stack(
                           children: [
                             form,
                             Positioned(
-                              top: 12,
-                              right: 8,
+                              top: screenHeight * 0.015,
+                              right: screenWidth * 0.02,
                               child: IconButton(
-                                icon: Icon(Icons.close, color: StatusColor.errorFull),
+                                icon: Icon(Icons.close,
+                                    color: StatusColor.errorFull),
                                 onPressed: () {
                                   setState(() {
                                     // Xóa form khỏi danh sách
@@ -133,27 +135,26 @@ class _MedicalHistoryState extends State<MedicalHistory>
               ),
             ),
           ),
-
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text('Bệnh di truyền', style: TextStyleCustom.heading_3a),
             trailing: CustomButton(
               type: ButtonType.iconOnly,
               state: ButtonState.text,
-              width: 48,
-              height: 48,
+              width: screenWidth * 0.1,
+              height: screenHeight * 0.05,
               icon: Icons.add_circle_outline_rounded,
               onPressed: _toggleFamilyHistory,
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 5), // Căn lề ngang với nội dung
+            padding: EdgeInsets.only(top: screenHeight * 0.001),
             child: Text(
               'Ghi chú: Bỏ qua nếu không có',
               style: TextStyleCustom.caption,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: screenHeight * 0.03),
           Visibility(
             visible: familyHistoryForms.isNotEmpty,
             child: Scrollbar(
@@ -164,21 +165,23 @@ class _MedicalHistoryState extends State<MedicalHistory>
                   border: Border.all(color: PrimaryColor.primary_10, width: 1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                height: 500,
+                height: screenHeight * 0.6,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: familyHistoryForms.map((form) {
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: EdgeInsets.only(bottom: screenHeight * 0.02),
                         child: Stack(
                           children: [
                             form,
                             Positioned(
-                              top: 12,
-                              right: 8,
+                              top: screenHeight * 0.015,
+                              right: screenWidth * 0.02,
                               child: IconButton(
-                                icon: Icon(Icons.close, color: StatusColor.errorFull),  // Nút xóa
+                                icon: Icon(Icons.close,
+                                    color: StatusColor.errorFull),
+                                // Nút xóa
                                 onPressed: () {
                                   setState(() {
                                     // Xóa form khỏi danh sách
@@ -202,11 +205,13 @@ class _MedicalHistoryState extends State<MedicalHistory>
   }
 
   Widget buildMedicalHistoryForm() {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
       margin: EdgeInsets.only(top: 12),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-          border: Border.all(color: PrimaryColor.primary_10, width: 0.5),
+          border: Border.all(color: PrimaryColor.primary_10, width: 1.2),
           borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +224,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
             controller: typeOfDiseaseController,
             keyboardType: TextInputType.multiline,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenHeight * 0.02),
           Row(
             children: [
               Expanded(
@@ -231,7 +236,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
                 controller: yearOfDiagnosisController,
                 keyboardType: TextInputType.multiline,
               )),
-              const SizedBox(width: 20),
+              SizedBox(width: screenWidth * 0.04),
               Expanded(
                   child: CustomTextInput(
                 label: 'Tình trạng hiện tại',
@@ -243,7 +248,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
               )),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenHeight * 0.02),
           CustomTextInput(
             label: 'Phương pháp điều trị',
             type: TextFieldType.textIconRight,
@@ -252,7 +257,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
             controller: treatmentController,
             icon: Icons.arrow_drop_down_sharp,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenHeight * 0.02),
           CustomTextInput(
             type: TextFieldType.text,
             state: TextFieldState.defaultState,
@@ -261,7 +266,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
             controller: complicationsController,
             keyboardType: TextInputType.multiline,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenHeight * 0.02),
           CustomTextInput(
             type: TextFieldType.text,
             state: TextFieldState.defaultState,
@@ -270,7 +275,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
             controller: hospitalTreatmentController,
             keyboardType: TextInputType.multiline,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenHeight * 0.02),
           CustomTextInput(
             type: TextFieldType.text,
             state: TextFieldState.defaultState,
@@ -285,70 +290,73 @@ class _MedicalHistoryState extends State<MedicalHistory>
   }
 
   Widget buildFamilyHistoryForm() {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
-        margin: EdgeInsets.only(top: 12),
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: PrimaryColor.primary_10, width: 0.5),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextInput(
-              type: TextFieldType.text,
-              state: TextFieldState.defaultState,
-              label: 'Loại bệnh',
-              hintText: 'Điền loại bệnh mắc phải',
-              controller: geneticDiseaseController,
-              keyboardType: TextInputType.multiline,
-            ),
-            const SizedBox(height: 16),
-            CustomTextInput(
-              label: 'Thành viên trong gia đình mắc bệnh',
-              type: TextFieldType.text,
-              state: TextFieldState.defaultState,
-              hintText: 'Điền mối quan hệ',
-              controller: relationshipFMController,
-              keyboardType: TextInputType.multiline,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomTextInput(
-                    label: 'Năm phát hiện - Thành viên gia đình',
-                    type: TextFieldType.text,
-                    state: TextFieldState.defaultState,
-                    hintText: 'Điền năm',
-                    controller: yearOfDiseaseFMController,
-                    keyboardType: TextInputType.multiline,
-                  ),
+      margin: EdgeInsets.only(top: screenHeight * 0.01),
+      padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
+      decoration: BoxDecoration(
+        border: Border.all(color: PrimaryColor.primary_10, width: 1.2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextInput(
+            type: TextFieldType.text,
+            state: TextFieldState.defaultState,
+            label: 'Loại bệnh',
+            hintText: 'Điền loại bệnh mắc phải',
+            controller: geneticDiseaseController,
+            keyboardType: TextInputType.multiline,
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          CustomTextInput(
+            label: 'Thành viên trong gia đình mắc bệnh',
+            type: TextFieldType.text,
+            state: TextFieldState.defaultState,
+            hintText: 'Điền mối quan hệ',
+            controller: relationshipFMController,
+            keyboardType: TextInputType.multiline,
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          Row(
+            children: [
+              Expanded(
+                child: CustomTextInput(
+                  label: 'Năm phát hiện - Thành viên gia đình',
+                  type: TextFieldType.text,
+                  state: TextFieldState.defaultState,
+                  hintText: 'Điền năm',
+                  controller: yearOfDiseaseFMController,
+                  keyboardType: TextInputType.multiline,
                 ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: CustomTextInput(
-                    label: 'Tình trạng hiện tại - Thành viên gia đình',
-                    type: TextFieldType.textIconRight,
-                    state: TextFieldState.defaultState,
-                    hintText: 'Chọn tình trạng hiện tại',
-                    controller: currentMedicalConditionFMController,
-                    icon: Icons.arrow_drop_down_sharp,
-                  ),
+              ),
+              SizedBox(width: screenWidth * 0.04),
+              Expanded(
+                child: CustomTextInput(
+                  label: 'Tình trạng hiện tại - Thành viên gia đình',
+                  type: TextFieldType.textIconRight,
+                  state: TextFieldState.defaultState,
+                  hintText: 'Chọn tình trạng hiện tại',
+                  controller: currentMedicalConditionFMController,
+                  icon: Icons.arrow_drop_down_sharp,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            CustomTextInput(
-              type: TextFieldType.text,
-              state: TextFieldState.defaultState,
-              label: 'Ghi chú',
-              hintText: 'Điền ghi chú',
-              controller: noteDiseaseFMController,
-              keyboardType: TextInputType.multiline,
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          CustomTextInput(
+            type: TextFieldType.text,
+            state: TextFieldState.defaultState,
+            label: 'Ghi chú',
+            hintText: 'Điền ghi chú',
+            controller: noteDiseaseFMController,
+            keyboardType: TextInputType.multiline,
+          ),
+        ],
+      ),
     );
   }
 }

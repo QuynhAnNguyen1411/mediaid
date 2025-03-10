@@ -20,13 +20,16 @@ class TabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+
     bool isSelected = state == TabState.selectedState;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 115,
-        height: 61,
+        width: screenWidth * 0.3,
+        height: screenHeight * 0.07,
         alignment: Alignment.center,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -40,8 +43,8 @@ class TabItem extends StatelessWidget {
 
             const SizedBox(height: 5),
             Container(
-              width: 115,
-              height: 3,
+              width: screenWidth * 0.3,
+              height: screenHeight * 0.003,
               decoration: BoxDecoration(
                 color: isSelected ? PrimaryColor.primary_05 : NeutralColor.neutral_03,
                 borderRadius: BorderRadius.circular(3),

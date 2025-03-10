@@ -1,20 +1,22 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../design_system/color/primary_color.dart';
 import '../../design_system/textstyle/textstyle.dart';
 
-class MedicalFacilityItem extends StatelessWidget{
+class PatientGroupItem extends StatelessWidget {
   final bool isSelected;
   final bool isDisabled;
-  final String address;
+  final String label;
+  final Widget icon;
   final ValueChanged<bool>? onChanged;
 
 
-  const MedicalFacilityItem({
+  const PatientGroupItem({
     super.key,
     required this.isSelected,
     required this.isDisabled,
-    required this.address,
+    required this.label,
+    required this.icon,
     this.onChanged,
   });
 
@@ -31,7 +33,7 @@ class MedicalFacilityItem extends StatelessWidget{
         }
       },
       child: Container(
-        padding: EdgeInsets.only(left: screenWidth * 0.02, right: screenWidth * 0.02, top: screenHeight * 0.01, bottom: screenHeight * 0.01),
+        padding: EdgeInsets.only(left: screenWidth * 0.03, right: screenWidth * 0.03, top: screenHeight * 0.02, bottom: screenHeight * 0.02),
         decoration: BoxDecoration(
           color: isSelected
               ? PrimaryColor.primary_05
@@ -44,31 +46,23 @@ class MedicalFacilityItem extends StatelessWidget{
             width: isSelected ? screenWidth * 0.002 : screenWidth * 0.004,
           ),
         ),
-        child: Row(
+        child: Column(
           children: [
-            Icon(
-              Icons.location_on,
-              color: isSelected
-                  ? PrimaryColor.primary_00
-                  : PrimaryColor.primary_03,
-            ),
-            SizedBox(width: screenWidth * 0.03),
-            Expanded(
-              child: Text(
-                address,
-                style: (isSelected
-                    ? TextStyleCustom.heading_3c
-                    : TextStyleCustom.bodyLarge).copyWith(
-                  color: isSelected
-                      ? PrimaryColor.primary_00
-                      : PrimaryColor.primary_03,
-                ),
+            icon,
+            SizedBox(height: screenHeight * 0.02),
+            Text(
+              label,
+              style: (isSelected
+                  ? TextStyleCustom.heading_3c
+                  : TextStyleCustom.bodyLarge).copyWith(
+                color: isSelected
+                    ? PrimaryColor.primary_00
+                    : PrimaryColor.primary_03,
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 }
-

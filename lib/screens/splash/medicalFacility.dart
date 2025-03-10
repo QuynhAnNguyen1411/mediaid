@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mediaid/design_system/button/button.dart';
+import 'package:mediaid/routes.dart';
 import 'package:mediaid/screens/splash/navigationSurvey.dart';
 
 import '../../components/registration/medicalFacilityItem.dart';
 import '../../design_system/color/primary_color.dart';
 import '../../design_system/textstyle/textstyle.dart';
 
-class MedicalFacility extends StatefulWidget{
+class MedicalFacility extends StatefulWidget {
   const MedicalFacility({super.key});
 
   @override
@@ -15,8 +16,9 @@ class MedicalFacility extends StatefulWidget{
   }
 }
 
-class _MedicalFacilityState extends State<MedicalFacility>{
+class _MedicalFacilityState extends State<MedicalFacility> {
   int? _selectedFacilityIndex;
+
   bool get isContinueEnabled => _selectedFacilityIndex != null;
 
   void _selectFacility(int index) {
@@ -30,8 +32,11 @@ class _MedicalFacilityState extends State<MedicalFacility>{
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: PrimaryColor.primary_00,
       body: Padding(
@@ -46,16 +51,17 @@ class _MedicalFacilityState extends State<MedicalFacility>{
                   // Logo Hospital K
                   Image.asset(
                     'assets/logo/national_cancer_hospital_logo.jpg',
-                    height: 65,
-                    width: 85,
+                    height: screenHeight * 0.07,
+                    width: screenWidth * 0.2,
                   ),
 
                   // Button display language
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 4),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.03,
+                        vertical: screenHeight * 0.005),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [
                           Color(0xFFCCDEE7),
                           Color(0xFFCCDEE7),
@@ -72,10 +78,10 @@ class _MedicalFacilityState extends State<MedicalFacility>{
                         // VN flag
                         Image.asset(
                           'assets/images/registration/vietnam_flag.jpg',
-                          width: 32,
-                          height: 32,
+                          width: screenWidth * 0.08,
+                          height: screenHeight * 0.04,
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: screenWidth * 0.03),
                         // Text Vietnam
                         Text(
                           'Vietnam',
@@ -91,12 +97,12 @@ class _MedicalFacilityState extends State<MedicalFacility>{
             Center(
               child: Image.asset(
                 'assets/images/splash/male_doctor_medical_facility.jpg',
-                height: 330,
-                width: 320,
+                height: screenHeight * 0.4,
+                width: screenWidth * 0.8,
                 fit: BoxFit.contain,
               ),
             ),
-            const SizedBox(height: 25),
+            SizedBox(height: screenHeight * 0.03),
             Column(
               children: [
                 Text(
@@ -104,55 +110,60 @@ class _MedicalFacilityState extends State<MedicalFacility>{
                   style: TextStyleCustom.heading_2a
                       .copyWith(color: PrimaryColor.primary_10),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: screenHeight * 0.02),
                 Column(
-                    children: [
-                      MedicalFacilityItem(
-                        address: 'Cơ sở 1: Số 43 Quán Sứ và số 9A - 9B Phan Chu Trinh, Hoàn Kiếm, Hà Nội',
-                        isSelected: _selectedFacilityIndex == 0, // So sánh với index
-                        isDisabled: false,
-                        onChanged: (isSelected) {
-                          _selectFacility(0); // Chọn cơ sở 1
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      MedicalFacilityItem(
-                        address: 'Cơ sở 2: Tựu Liệt, Tam Hiệp, Thanh Trì, Hà Nội',
-                        isSelected: _selectedFacilityIndex == 1, // So sánh với index
-                        isDisabled: false,
-                        onChanged: (isSelected) {
-                          _selectFacility(1); // Chọn cơ sở 2
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      MedicalFacilityItem(
-                        address: 'Cơ sở 3: Số 30 Cầu Bươu, Tân Triều, Thanh Trì, Hà Nội',
-                        isSelected: _selectedFacilityIndex == 2,
-                        isDisabled: false,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectFacility(2);
-                          });
-                        },
-                      ),
-                    ],
+                  children: [
+                    MedicalFacilityItem(
+                      address:
+                          'Cơ sở 1: Số 43 Quán Sứ và số 9A - 9B Phan Chu Trinh, Hoàn Kiếm, Hà Nội',
+                      isSelected: _selectedFacilityIndex == 0,
+                      // So sánh với index
+                      isDisabled: false,
+                      onChanged: (isSelected) {
+                        _selectFacility(0); // Chọn cơ sở 1
+                      },
+                    ),
+                    SizedBox(height: screenHeight * 0.015),
+                    MedicalFacilityItem(
+                      address: 'Cơ sở 2: Tựu Liệt, Tam Hiệp, Thanh Trì, Hà Nội',
+                      isSelected: _selectedFacilityIndex == 1,
+                      // So sánh với index
+                      isDisabled: false,
+                      onChanged: (isSelected) {
+                        _selectFacility(1); // Chọn cơ sở 2
+                      },
+                    ),
+                    SizedBox(height: screenHeight * 0.015),
+                    MedicalFacilityItem(
+                      address:
+                          'Cơ sở 3: Số 30 Cầu Bươu, Tân Triều, Thanh Trì, Hà Nội',
+                      isSelected: _selectedFacilityIndex == 2,
+                      isDisabled: false,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectFacility(2);
+                        });
+                      },
+                    ),
+                  ],
                 )
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: screenHeight * 0.03),
             CustomButton(
               type: ButtonType.standard,
-              state: isContinueEnabled ? ButtonState.fill1 : ButtonState.disabled,
+              state:
+                  isContinueEnabled ? ButtonState.fill1 : ButtonState.disabled,
               text: "Tiếp tục",
               width: double.infinity,
-              height: 50,
-              onPressed: isContinueEnabled ? () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NavigationSurvey()),
-                );
-              } : null,
-            )
+              height: screenHeight * 0.06,
+              onPressed: isContinueEnabled
+                  ? () {
+                      Navigator.pushNamed(context, MediaidRoutes.navigationSurvey);
+                    }
+                  : null,
+            ),
+            SizedBox(height: screenHeight * 0.02),
           ],
         ),
       ),

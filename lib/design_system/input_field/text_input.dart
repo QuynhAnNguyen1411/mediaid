@@ -10,7 +10,7 @@ enum TextFieldState { defaultState, error, success, entered, disabled }
 
 class CustomTextInput extends StatelessWidget {
   final String? label;
-  final bool isRequired; // Thêm biến này để quyết định có dấu * hay không
+  final bool isRequired;
   final String? helperText;
   final String? hintText;
   final IconData? icon;
@@ -42,6 +42,8 @@ class CustomTextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     bool isDisabled = state == TextFieldState.disabled;
     Color borderColor = _getBorderColor();
     Color textColor = isDisabled ? NeutralColor.neutral_04 : NeutralColor.neutral_10;
@@ -51,7 +53,7 @@ class CustomTextInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) _buildLabel(),
-        const SizedBox(height: 8),
+        SizedBox(height: screenHeight * 0.01),
         TextField(
           controller: controller,
           obscureText: obscureText,
@@ -107,12 +109,17 @@ class CustomTextInput extends StatelessWidget {
   Widget? _buildSuffixIcon() {
     if (type == TextFieldType.textIconRight || type == TextFieldType.textIconRightHelper) {
       return GestureDetector(
-        onTap: onTap, // Khi ấn vào icon sẽ gọi onTap
-        child: Icon(icon, size: 24, color: _getIconColor()),
+        onTap: onTap,
+        child: Icon(
+          icon,
+          size: 24,
+          color: _getIconColor(),
+        ),
       );
     }
     return null;
   }
+
 
   Color _getBorderColor() {
     switch (state) {
