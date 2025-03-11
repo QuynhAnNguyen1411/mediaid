@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+
 
 import 'package:mediaid/design_system/button/button.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
@@ -8,9 +12,9 @@ import 'package:mediaid/design_system/color/status_color.dart';
 import 'package:mediaid/design_system/input_field/text_input.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/design_system/selection/radio_button.dart';
+import 'package:mediaid/models/registration/registration.dart';
 import 'package:mediaid/routes.dart';
 import 'package:mediaid/screens/login/login.dart';
-
 import '../../api/register_w_login/registration_api.dart';
 import '../../design_system/color/neutral_color.dart';
 import '../../models/registration/gender.dart';
@@ -70,11 +74,11 @@ class _RegistrationState extends State<Registration> {
   String? passwordError;
 
   //Dropdown
-  String? _selectedGender;
-  List<Gender> genders = [];
+  late List<String> _danTocList = [];
+  late List<String> _gioiTinhList = [];
 
-  List<Nation> nations = [];
-  String? _selectedNation;
+  String? _selectedDanToc;
+  String? _selectedGioiTinh;
 
   // FocusNodes để theo dõi khi rời khỏi ô nhập liệu
   late FocusNode personalIDFocusNode;
@@ -172,26 +176,12 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-  // Tải dữ liệu dân tộc
-  Future<void> _loadEthnicities() async {
-    List<Nation> nationList = await getNation();
-    setState(() {
-      nations = nationList; // Cập nhật danh sách dân tộc
-    });
-  }
 
-  // Tải dữ liệu dân tộc
-  Future<void> _loadGender() async {
-    List<Gender> genderList = await getGender(); // Lấy dữ liệu giới tính
-    setState(() {
-      genders = genderList; // Cập nhật danh sách giới tính
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-
+    _fetchDropdownData();
     personalIDFocusNode = FocusNode();
     healthInsuranceFocusNode = FocusNode();
     phoneNumberFocusNode = FocusNode();
@@ -213,8 +203,6 @@ class _RegistrationState extends State<Registration> {
     phoneNumberController.addListener(_validateForm);
     patientPasswordController.addListener(_validateForm);
 
-    _loadEthnicities();
-    _loadGender();
   }
 
   @override
@@ -299,6 +287,72 @@ class _RegistrationState extends State<Registration> {
     passwordError = null;
     return true;
   }
+
+  Future<void> _fetchDropdownData() async {
+    const String baseUrl = "http://10.0.2.2:8080/api/static/staticDataForRegistry";
+
+    try {
+      final response = await http.get(Uri.parse(baseUrl));
+      print("📢 Đang gọi API: $baseUrl");
+      print("📢 Trạng thái API: ${response.statusCode}");
+      print("📢 Dữ liệu trả về: ${response.body}");
+
+      if (response.statusCode == 200) {
+        String responseBody = utf8.decode(response.bodyBytes);
+        Map<String, dynamic> data = jsonDecode(responseBody);
+
+        setState(() {
+          _danTocList = (data['nation'] as List)
+              .map((e) => e['nationName'].toString())
+              .toList();
+          _gioiTinhList = (data['gender'] as List)
+              .map((e) => e['genderName'].toString())
+              .toList();
+        });
+
+        print("✅ Đã cập nhật danh sách Dân tộc: $_danTocList");
+        print("✅ Đã cập nhật danh sách Giới tính: $_gioiTinhList");
+
+      } else {
+        print("❌ Lỗi API: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❌ Lỗi khi gọi API: $e");
+    }
+  }
+
+
+
+  // Hàm gửi dữ liệu form khi nhấn nút "Tiếp tục"
+  Future<void> _submitForm() async {
+    // Tạo đối tượng RegistrationForm từ dữ liệu nhập vào
+    RegistrationForm form = RegistrationForm(
+      personalIdentifier: personalIdentifierController.text,
+      healthInsurance: healthInsuranceController.text,
+      patientName: patientNameController.text,
+      addressPatient: addressPatientController.text,
+      phoneNumber: phoneNumberController.text,
+      emailPatient: emailPatientController.text,
+      dob: dobController.text,
+      sexPatient: sexPatientController.text,
+      patientPassword: patientPasswordController.text,
+      patientFamilyName: patientFamilyNameController.text,
+      patientRelationship: patientRelationshipController.text,
+      patientFamilyIdentifier: patientFamilyIdentifierController.text,
+      patientFamilyPhoneNumber: patientFamilyPhoneNumberController.text,
+    );
+
+    // Gửi form đến API
+    try {
+      await RegistrationApi.submitForm(form);
+      // Hiển thị thông báo thành công
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Dữ liệu đã được gửi thành công!')));
+    } catch (e) {
+      // Hiển thị thông báo lỗi nếu gửi thất bại
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Gửi dữ liệu thất bại: $e')));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -534,7 +588,7 @@ class _RegistrationState extends State<Registration> {
                                     .copyWith(color: PrimaryColor.primary_10)),
                             SizedBox(height: screenHeight * 0.005),
                             DropdownButtonFormField<String>(
-                              value: _selectedGender,
+                              value: _selectedGioiTinh,
                               hint: Text('Chọn giới tính',
                                   style: TextStyleCustom.bodySmall.copyWith(
                                       color: NeutralColor.neutral_06)),
@@ -559,18 +613,18 @@ class _RegistrationState extends State<Registration> {
                                 ),
                               ),
                               dropdownColor: PrimaryColor.primary_00,
-                              items: genders.map((gender) {
+                              items: _gioiTinhList.map((gioiTinh) {
                                 return DropdownMenuItem<String>(
-                                    value: gender.genderID.toString(),
+                                    value: gioiTinh,
                                     child: Text(
-                                      gender.genderName,
+                                      gioiTinh,
                                       style: TextStyleCustom.bodySmall.copyWith(
                                           color: PrimaryColor.primary_10),
                                     ));
                               }).toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  _selectedGender = value;
+                                  _selectedGioiTinh = value;
                                 });
                               },
                             ),
@@ -591,7 +645,7 @@ class _RegistrationState extends State<Registration> {
                         SizedBox(height: screenHeight * 0.005),
                         // Dropdown Button
                         DropdownButtonFormField(
-                          value: _selectedNation,
+                          value: _selectedDanToc,
                           hint: Text(
                             'Chọn dân tộc',
                             style: TextStyleCustom.bodySmall.copyWith(
@@ -618,11 +672,11 @@ class _RegistrationState extends State<Registration> {
                             ),
                           ),
                           dropdownColor: PrimaryColor.primary_00,
-                          items: nations.map((nation) {
+                          items: _danTocList.map((danToc) {
                             return DropdownMenuItem<String>(
-                              value: nation.nationID.toString(),
+                              value: danToc,
                               child: Text(
-                                nation.nationName,
+                                danToc,
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10),
                               ),
@@ -630,7 +684,7 @@ class _RegistrationState extends State<Registration> {
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
-                              _selectedNation = value;
+                              _selectedDanToc = value;
                             });
                           },
                         ),
@@ -756,6 +810,7 @@ class _RegistrationState extends State<Registration> {
                 onPressed: isFormValid
                     ? () {
                         _showSuccessDialog(context);
+                        _submitForm;
                       }
                     : null,
               ),

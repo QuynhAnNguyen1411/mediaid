@@ -1,7 +1,7 @@
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
 // import '../../config.dart';
-// import '../../models/registration/patient_information.dart';
+// import '../../models/registration/registration.dart';
 // import 'patient_information_api.dart';
 // class PatientInformationApi {
 //   // Phương thức để lấy thông tin bệnh nhân
