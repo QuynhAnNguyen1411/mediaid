@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bệnh viện K',
-      initialRoute: MediaidRoutes.registration,
+      initialRoute: MediaidRoutes.patientHistory,
       onGenerateRoute: MediaidRoutes.generateRoute,
     );
   }

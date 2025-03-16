@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-
 
 import 'package:mediaid/design_system/button/button.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
@@ -14,12 +10,10 @@ import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/design_system/selection/radio_button.dart';
 import 'package:mediaid/models/registration/registration.dart';
 import 'package:mediaid/routes.dart';
-import 'package:mediaid/screens/login/login.dart';
 import '../../api/register_w_login/registration_api.dart';
 import '../../design_system/color/neutral_color.dart';
 import '../../models/registration/gender.dart';
 import '../../models/registration/nation.dart';
-import '../electronicHealthRecord/personalInformation/patientHistory/patientHistory_Common.dart';
 
 final formatter = DateFormat.yMd();
 
@@ -45,6 +39,7 @@ class _RegistrationState extends State<Registration> {
   final TextEditingController emailPatientController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
   final TextEditingController sexPatientController = TextEditingController();
+  final TextEditingController nationPatientController = TextEditingController();
   final TextEditingController patientPasswordController =
       TextEditingController();
 
@@ -67,6 +62,10 @@ class _RegistrationState extends State<Registration> {
   String? personalIDError;
   bool isPhoneNumberValid = true;
   String? phoneNumberError;
+  bool isFamilyPersonalIDValid = true;
+  String? familyPersonalIDError;
+  bool isFamilyPhoneNumberValid = true;
+  String? familyPhoneNumberError;
 
   // Mật khẩu
   bool isPasswordObscured = true;
@@ -74,17 +73,20 @@ class _RegistrationState extends State<Registration> {
   String? passwordError;
 
   //Dropdown
-  late List<String> _danTocList = [];
-  late List<String> _gioiTinhList = [];
+  late List<Nation> _danTocList = [];
+  late List<Gender> _gioiTinhList = [];
 
-  String? _selectedDanToc;
-  String? _selectedGioiTinh;
+  int? _selectedDantocId;
+  int? _selectedGioitinhId;
 
   // FocusNodes để theo dõi khi rời khỏi ô nhập liệu
   late FocusNode personalIDFocusNode;
   late FocusNode healthInsuranceFocusNode;
   late FocusNode phoneNumberFocusNode;
   late FocusNode passwordFocusNode;
+
+  late FocusNode familyPersonalIDFocusNode;
+  late FocusNode familyPhoneNumberFocusNode;
 
   // Hàm hiển thị sau khi đăng ký thành công
   void _showSuccessDialog(BuildContext context) {
@@ -96,49 +98,104 @@ class _RegistrationState extends State<Registration> {
       // Không cho phép đóng popup bằng cách click bên ngoài
       builder: (BuildContext context) {
         return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          ),
-          backgroundColor: PrimaryColor.primary_00,
-          elevation: 5,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/registration/success_dialog.jpg',
-                    height: screenHeight * 0.1,
-                    width: screenWidth * 0.2,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  Text(
-                    'Đăng ký thành công!',
-                    style: TextStyleCustom.bodyLarge
-                        .copyWith(color: StatusColor.successFull),
-                  ),
-                  SizedBox(height: screenHeight * 0.015),
-                  Text(
-                    'Hãy đăng nhập ngay.',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(
-                          context, '/logIn'); // Chuyển về màn hình đăng nhập
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
             ),
-          )
-        );
+            backgroundColor: PrimaryColor.primary_00,
+            elevation: 5,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.04,
+                    vertical: screenHeight * 0.02),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/images/registration/success_dialog.jpg',
+                      height: screenHeight * 0.1,
+                      width: screenWidth * 0.2,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    Text(
+                      'Đăng ký thành công!',
+                      style: TextStyleCustom.bodyLarge
+                          .copyWith(color: StatusColor.successFull),
+                    ),
+                    SizedBox(height: screenHeight * 0.015),
+                    Text(
+                      'Hãy đăng nhập ngay.',
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                            context, '/logIn'); // Chuyển về màn hình đăng nhập
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
+            ));
+      },
+    );
+  }
+
+  void _showFailureDialog(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            backgroundColor: PrimaryColor.primary_00,
+            elevation: 5,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.04,
+                    vertical: screenHeight * 0.02),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/images/registration/success_dialog.jpg',
+                      height: screenHeight * 0.1,
+                      width: screenWidth * 0.2,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    Text(
+                      'Đăng ký không thành công!',
+                      style: TextStyleCustom.bodyLarge
+                          .copyWith(color: StatusColor.errorFull),
+                    ),
+                    SizedBox(height: screenHeight * 0.015),
+                    Text(
+                      'Hãy thử lại ngay',
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context,
+                            '/registration'); // Chuyển về màn hình đăng nhập
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
+            ));
       },
     );
   }
@@ -176,8 +233,6 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -203,6 +258,10 @@ class _RegistrationState extends State<Registration> {
     phoneNumberController.addListener(_validateForm);
     patientPasswordController.addListener(_validateForm);
 
+    patientFamilyNameController.addListener(_validateForm);
+    patientRelationshipController.addListener(_validateForm);
+    patientFamilyIdentifierController.addListener(_validateForm);
+    patientFamilyPhoneNumberController.addListener(_validateForm);
   }
 
   @override
@@ -211,6 +270,8 @@ class _RegistrationState extends State<Registration> {
     healthInsuranceFocusNode.dispose();
     phoneNumberFocusNode.dispose();
     passwordFocusNode.dispose();
+    familyPersonalIDFocusNode.dispose();
+    familyPhoneNumberFocusNode.dispose();
 
     personalIdentifierController.dispose();
     healthInsuranceController.dispose();
@@ -220,6 +281,11 @@ class _RegistrationState extends State<Registration> {
     phoneNumberController.dispose();
     patientPasswordController.dispose();
 
+    patientFamilyNameController.dispose();
+    patientRelationshipController.dispose();
+    patientFamilyIdentifierController.dispose();
+    patientFamilyPhoneNumberController.dispose();
+
     super.dispose();
   }
 
@@ -227,27 +293,45 @@ class _RegistrationState extends State<Registration> {
     setState(() {
       isPersonalIDValid =
           _validatePersonalID(personalIdentifierController.text);
+      isFamilyPersonalIDValid =
+          _validateFamilyPersonalID(patientFamilyIdentifierController.text);
       isHealthInsuranceValid =
           _validateHealthInsurance(healthInsuranceController.text);
       isPhoneNumberValid = _validatePhoneNumber(phoneNumberController.text);
+      isFamilyPhoneNumberValid =
+          _validateFamilyPhoneNumber(patientFamilyPhoneNumberController.text);
       isPasswordValid = _validatePassword(patientPasswordController.text);
       isFormValid = isPersonalIDValid &&
           isHealthInsuranceValid &&
+          isFamilyPersonalIDValid &&
+          isPhoneNumberValid &&
+          isFamilyPhoneNumberValid &&
+          isPasswordValid &&
           patientNameController.text.trim().isNotEmpty &&
           dobController.text.trim().isNotEmpty &&
           addressPatientController.text.trim().isNotEmpty &&
-          phoneNumberController.text.trim().isNotEmpty &&
-          isPasswordValid;
+          patientFamilyNameController.text.trim().isNotEmpty &&
+          patientRelationshipController.text.trim().isNotEmpty;
     });
   }
 
-  // Hàm check CCCD / CMT
+  // Hàm check CCCD / CMT - Bệnh nhân
   bool _validatePersonalID(String personalID) {
     if (personalID.isEmpty || personalID.length == 12) {
       personalIDError = null;
       return true;
     }
     personalIDError = 'Số CCCD/CMT phải có 12 số';
+    return false;
+  }
+
+// Hàm check CCCD / CMT - Người nhà bệnh nhân
+  bool _validateFamilyPersonalID(String familyPersonalID) {
+    if (familyPersonalID.isEmpty || familyPersonalID.length == 12) {
+      familyPersonalIDError = null;
+      return true;
+    }
+    familyPersonalIDError = 'Số CCCD/CMT phải có 12 số';
     return false;
   }
 
@@ -261,13 +345,23 @@ class _RegistrationState extends State<Registration> {
     return true;
   }
 
-  // Hàm check số điện thoại
+  // Hàm check số điện thoại - Bệnh nhân
   bool _validatePhoneNumber(String phoneNumber) {
     if (phoneNumber.isNotEmpty && phoneNumber.length < 10) {
       phoneNumberError = 'Số điện thoại phải có 10 hoặc 11 số';
       return false;
     }
     phoneNumberError = null;
+    return true;
+  }
+
+  // Hàm check số điện thoại - Người nhà bệnh nhân
+  bool _validateFamilyPhoneNumber(String familyPhoneNumber) {
+    if (familyPhoneNumber.isNotEmpty && familyPhoneNumber.length < 10) {
+      familyPhoneNumberError = 'Số điện thoại phải có 10 hoặc 11 số';
+      return false;
+    }
+    familyPhoneNumberError = null;
     return true;
   }
 
@@ -289,52 +383,46 @@ class _RegistrationState extends State<Registration> {
   }
 
   Future<void> _fetchDropdownData() async {
-    const String baseUrl = "http://10.0.2.2:8080/api/static/staticDataForRegistry";
-
     try {
-      final response = await http.get(Uri.parse(baseUrl));
-      print("📢 Đang gọi API: $baseUrl");
-      print("📢 Trạng thái API: ${response.statusCode}");
-      print("📢 Dữ liệu trả về: ${response.body}");
+      Map<String, List<Object>>? response =
+          await RegistrationApi.getStaticDataForRegistration();
 
-      if (response.statusCode == 200) {
-        String responseBody = utf8.decode(response.bodyBytes);
-        Map<String, dynamic> data = jsonDecode(responseBody);
-
+      if (response != null) {
+        print("a");
         setState(() {
-          _danTocList = (data['nation'] as List)
-              .map((e) => e['nationName'].toString())
-              .toList();
-          _gioiTinhList = (data['gender'] as List)
-              .map((e) => e['genderName'].toString())
-              .toList();
+          _danTocList = (response['danToc'] as List<Nation>).toList();
+          _gioiTinhList = (response['gioiTinh'] as List<Gender>).toList();
         });
 
         print("✅ Đã cập nhật danh sách Dân tộc: $_danTocList");
         print("✅ Đã cập nhật danh sách Giới tính: $_gioiTinhList");
-
       } else {
-        print("❌ Lỗi API: ${response.statusCode}");
+        print("❌ Lỗi API: ${response}");
       }
     } catch (e) {
       print("❌ Lỗi khi gọi API: $e");
     }
   }
 
-
-
   // Hàm gửi dữ liệu form khi nhấn nút "Tiếp tục"
   Future<void> _submitForm() async {
     // Tạo đối tượng RegistrationForm từ dữ liệu nhập vào
+    String bhyt;
+    if (selectedRadio != null) {
+      bhyt = selectedRadio ?? "Không dùng bảo hiểm y tế";
+    } else {
+      bhyt = healthInsuranceController.text;
+    }
     RegistrationForm form = RegistrationForm(
       personalIdentifier: personalIdentifierController.text,
-      healthInsurance: healthInsuranceController.text,
+      healthInsurance: bhyt,
       patientName: patientNameController.text,
       addressPatient: addressPatientController.text,
       phoneNumber: phoneNumberController.text,
       emailPatient: emailPatientController.text,
       dob: dobController.text,
-      sexPatient: sexPatientController.text,
+      sexPatient: _selectedGioitinhId ?? 1,
+      nationPatient: _selectedDantocId ?? 1,
       patientPassword: patientPasswordController.text,
       patientFamilyName: patientFamilyNameController.text,
       patientRelationship: patientRelationshipController.text,
@@ -344,15 +432,19 @@ class _RegistrationState extends State<Registration> {
 
     // Gửi form đến API
     try {
+      print(form.toJson());
       await RegistrationApi.submitForm(form);
-      // Hiển thị thông báo thành công
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Dữ liệu đã được gửi thành công!')));
+      bool success = true;
+      if (success) {
+        _showSuccessDialog(context);
+      } else {
+        _showFailureDialog(context);
+      }
     } catch (e) {
       // Hiển thị thông báo lỗi nếu gửi thất bại
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Gửi dữ liệu thất bại: $e')));
+      _showFailureDialog(context);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +514,7 @@ class _RegistrationState extends State<Registration> {
                 style: TextStyleCustom.heading_2a
                     .copyWith(color: PrimaryColor.primary_10),
               ),
-              SizedBox(height: screenHeight * 0.015),
+              SizedBox(height: screenHeight * 0.03),
               // Thông tin bệnh nhân
               // Text: Thông tin bệnh nhân
               Column(
@@ -432,7 +524,7 @@ class _RegistrationState extends State<Registration> {
                   Text(
                     'Thông tin bệnh nhân',
                     style: TextStyleCustom.heading_3a
-                        .copyWith(color: PrimaryColor.primary_10),
+                        .copyWith(color: NeutralColor.neutral_07),
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   // CCCD / CMT
@@ -476,12 +568,13 @@ class _RegistrationState extends State<Registration> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomRadioButton(
-                        isSelected: selectedRadio == 'option1',
+                        isSelected: selectedRadio == 'Không dùng bảo hiểm y tế',
                         isDisabled: false,
                         label: "Không dùng bảo hiểm y tế",
-                        onChanged: (value) {
+                        onChanged: (isSelected) {
                           setState(() {
-                            selectedRadio = 'option1';
+                            selectedRadio =
+                                isSelected ? 'Không dùng bảo hiểm y tế' : '';
                             healthInsuranceController.clear();
                             _validateForm();
                           });
@@ -489,12 +582,12 @@ class _RegistrationState extends State<Registration> {
                       ),
                       SizedBox(height: screenHeight * 0.015),
                       CustomRadioButton(
-                        isSelected: selectedRadio == 'option2',
+                        isSelected: selectedRadio == 'Miễn',
                         isDisabled: false,
                         label: "Miễn",
-                        onChanged: (value) {
+                        onChanged: (isSelected) {
                           setState(() {
-                            selectedRadio = 'option2';
+                            selectedRadio = isSelected ? 'Miễn' : '';
                             healthInsuranceController.clear();
                             _validateForm();
                           });
@@ -502,12 +595,12 @@ class _RegistrationState extends State<Registration> {
                       ),
                       SizedBox(height: screenHeight * 0.015),
                       CustomRadioButton(
-                        isSelected: selectedRadio == 'option3',
+                        isSelected: selectedRadio == 'Khác',
                         isDisabled: false,
                         label: "Khác",
-                        onChanged: (value) {
+                        onChanged: (isSelected) {
                           setState(() {
-                            selectedRadio = 'option3';
+                            selectedRadio = isSelected ? 'Khác' : '';
                             _validateForm();
                           });
                         },
@@ -539,10 +632,10 @@ class _RegistrationState extends State<Registration> {
                         : TextFieldState.error,
                     hintText: 'Điền mật khẩu đúng yêu cầu',
                     obscureText: isPasswordObscured,
-                    icon: isPasswordObscured
+                    iconTextInput: isPasswordObscured
                         ? Icons.visibility_off
                         : Icons.visibility,
-                    onTap: () {
+                    onTapIconTextInput: () {
                       setState(() {
                         isPasswordObscured = !isPasswordObscured;
                       });
@@ -573,7 +666,7 @@ class _RegistrationState extends State<Registration> {
                               isRequired: true,
                               hintText: "Chọn ngày sinh",
                               controller: dobController,
-                              icon: Icons.calendar_month,
+                              iconTextInput: Icons.calendar_month,
                             ),
                           ),
                         ),
@@ -587,8 +680,8 @@ class _RegistrationState extends State<Registration> {
                                 style: TextStyleCustom.heading_3b
                                     .copyWith(color: PrimaryColor.primary_10)),
                             SizedBox(height: screenHeight * 0.005),
-                            DropdownButtonFormField<String>(
-                              value: _selectedGioiTinh,
+                            DropdownButtonFormField<int>(
+                              value: _selectedGioitinhId,
                               hint: Text('Chọn giới tính',
                                   style: TextStyleCustom.bodySmall.copyWith(
                                       color: NeutralColor.neutral_06)),
@@ -614,17 +707,17 @@ class _RegistrationState extends State<Registration> {
                               ),
                               dropdownColor: PrimaryColor.primary_00,
                               items: _gioiTinhList.map((gioiTinh) {
-                                return DropdownMenuItem<String>(
-                                    value: gioiTinh,
+                                return DropdownMenuItem<int>(
+                                    value: gioiTinh.genderID,
                                     child: Text(
-                                      gioiTinh,
+                                      gioiTinh.genderName,
                                       style: TextStyleCustom.bodySmall.copyWith(
                                           color: PrimaryColor.primary_10),
                                     ));
                               }).toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  _selectedGioiTinh = value;
+                                  _selectedGioitinhId = value;
                                 });
                               },
                             ),
@@ -645,7 +738,7 @@ class _RegistrationState extends State<Registration> {
                         SizedBox(height: screenHeight * 0.005),
                         // Dropdown Button
                         DropdownButtonFormField(
-                          value: _selectedDanToc,
+                          value: _selectedDantocId,
                           hint: Text(
                             'Chọn dân tộc',
                             style: TextStyleCustom.bodySmall.copyWith(
@@ -673,10 +766,10 @@ class _RegistrationState extends State<Registration> {
                           ),
                           dropdownColor: PrimaryColor.primary_00,
                           items: _danTocList.map((danToc) {
-                            return DropdownMenuItem<String>(
-                              value: danToc,
+                            return DropdownMenuItem<int>(
+                              value: danToc.nationID,
                               child: Text(
-                                danToc,
+                                danToc.nationName,
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10),
                               ),
@@ -684,7 +777,7 @@ class _RegistrationState extends State<Registration> {
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
-                              _selectedDanToc = value;
+                              _selectedDantocId = value;
                             });
                           },
                         ),
@@ -743,7 +836,7 @@ class _RegistrationState extends State<Registration> {
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextInput(
                     label: 'Họ tên người nhà bệnh nhân / người giám hộ',
-                    isRequired: false,
+                    isRequired: true,
                     type: TextFieldType.text,
                     state: TextFieldState.defaultState,
                     hintText: 'Điền họ tên người nhà bệnh nhân / người giám hộ',
@@ -757,7 +850,7 @@ class _RegistrationState extends State<Registration> {
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextInput(
                     label: 'Mối quan hệ với bệnh nhân',
-                    isRequired: false,
+                    isRequired: true,
                     type: TextFieldType.text,
                     state: TextFieldState.defaultState,
                     hintText: 'Điền mối quan hệ với bệnh nhân',
@@ -771,9 +864,11 @@ class _RegistrationState extends State<Registration> {
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextInput(
                     label: 'Số CCCD / CMT',
-                    isRequired: false,
+                    isRequired: true,
                     type: TextFieldType.text,
-                    state: TextFieldState.defaultState,
+                    state: isFamilyPersonalIDValid
+                        ? TextFieldState.defaultState
+                        : TextFieldState.error,
                     hintText: 'Điền số CCCD/CMT người nhà bệnh nhân',
                     controller: patientFamilyIdentifierController,
                     keyboardType: TextInputType.number,
@@ -781,14 +876,16 @@ class _RegistrationState extends State<Registration> {
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(12),
                     ],
-                    errorMessage: personalIDError,
+                    errorMessage: familyPersonalIDError,
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomTextInput(
                     label: 'Số điện thoại',
-                    isRequired: false,
+                    isRequired: true,
                     type: TextFieldType.text,
-                    state: TextFieldState.defaultState,
+                    state: isFamilyPhoneNumberValid
+                        ? TextFieldState.defaultState
+                        : TextFieldState.error,
                     hintText: 'Điền số điện thoại người nhà bệnh nhân',
                     controller: patientFamilyPhoneNumberController,
                     keyboardType: TextInputType.number,
@@ -796,7 +893,7 @@ class _RegistrationState extends State<Registration> {
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(11),
                     ],
-                    errorMessage: phoneNumberError,
+                    errorMessage: familyPhoneNumberError,
                   ),
                 ],
               ),
@@ -809,8 +906,7 @@ class _RegistrationState extends State<Registration> {
                 height: screenHeight * 0.06,
                 onPressed: isFormValid
                     ? () {
-                        _showSuccessDialog(context);
-                        _submitForm;
+                        _submitForm();
                       }
                     : null,
               ),

@@ -153,7 +153,7 @@ class _SurgeryHistoryState extends State<SurgeryHistory>
             state: TextFieldState.defaultState,
             hintText: 'Chọn lý do phẫu thuật',
             controller: reasonSurgeryController,
-            icon: Icons.arrow_drop_down_sharp,
+            iconTextInput: Icons.arrow_drop_down_sharp,
           ),
           SizedBox(height: screenHeight * 0.02),
           Row(
@@ -165,7 +165,7 @@ class _SurgeryHistoryState extends State<SurgeryHistory>
                   state: TextFieldState.defaultState,
                   hintText: 'Chọn mức độ',
                   controller: surgeryLevelController,
-                  icon: Icons.arrow_drop_down_sharp,
+                  iconTextInput: Icons.arrow_drop_down_sharp,
                 ),
               ),
               SizedBox(width: screenWidth * 0.04),

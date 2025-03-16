@@ -6,7 +6,8 @@ class RegistrationForm  {
   String phoneNumber;
   String emailPatient;
   String dob;
-  String sexPatient;
+  int sexPatient;
+  int nationPatient;
   String patientPassword;
   String patientFamilyName;
   String patientRelationship;
@@ -22,6 +23,7 @@ class RegistrationForm  {
     required this.emailPatient,
     required this.dob,
     required this.sexPatient,
+    required this.nationPatient,
     required this.patientPassword,
     required this.patientFamilyName,
     required this.patientRelationship,
@@ -58,6 +60,7 @@ class RegistrationForm  {
       'emailPatient': emailPatient,
       'dob': dob,
       'sexPatient': sexPatient,
+      'nationPatient': nationPatient,
       'patientPassword': patientPassword,
       'patientFamilyName': patientFamilyName,
       'patientRelationship': patientRelationship,

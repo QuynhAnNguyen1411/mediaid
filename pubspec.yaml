@@ -90,6 +90,7 @@ flutter:
     - assets/icons/home/calendar.svg
     - assets/icons/electronicHealthRecord/notes.svg
     - assets/images/registration/success_dialog.jpg
+    - assets/icons/electronicHealthRecord/info.svg
 
 
   fonts:

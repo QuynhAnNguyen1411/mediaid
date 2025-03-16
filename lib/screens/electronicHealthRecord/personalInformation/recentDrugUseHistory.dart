@@ -343,7 +343,7 @@ class _DrugHistoryState extends State<DrugHistory> {
             state: TextFieldState.defaultState,
             hintText: 'Tình trạng sử dụng hiện tại',
             controller: usageStatusPDController,
-            icon: Icons.arrow_drop_down_sharp,
+            iconTextInput: Icons.arrow_drop_down_sharp,
           ),
           SizedBox(height: screenHeight * 0.02),
           Row(
@@ -365,7 +365,7 @@ class _DrugHistoryState extends State<DrugHistory> {
                 state: TextFieldState.defaultState,
                 hintText: 'Chọn thời gian',
                 controller: endPDController,
-                icon: Icons.arrow_drop_down_sharp,
+                iconTextInput: Icons.arrow_drop_down_sharp,
               )),
             ],
           ),
@@ -388,7 +388,8 @@ class _DrugHistoryState extends State<DrugHistory> {
     var screenHeight = MediaQuery.of(context).size.height;
     return Container(
       margin: EdgeInsets.only(top: screenHeight * 0.01),
-      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
+      padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
       decoration: BoxDecoration(
         border: Border.all(color: PrimaryColor.primary_10, width: 1.2),
         borderRadius: BorderRadius.circular(12),
@@ -402,7 +403,7 @@ class _DrugHistoryState extends State<DrugHistory> {
             state: TextFieldState.defaultState,
             hintText: 'Chọn loại sử dụng',
             controller: typeNPDController,
-            icon: Icons.arrow_drop_down_sharp,
+            iconTextInput: Icons.arrow_drop_down_sharp,
           ),
           SizedBox(height: screenHeight * 0.02),
           CustomTextInput(
@@ -420,7 +421,7 @@ class _DrugHistoryState extends State<DrugHistory> {
             state: TextFieldState.defaultState,
             hintText: 'Tình trạng sử dụng hiện tại',
             controller: usageStatusNPDController,
-            icon: Icons.arrow_drop_down_sharp,
+            iconTextInput: Icons.arrow_drop_down_sharp,
           ),
           SizedBox(height: screenHeight * 0.02),
           Row(
@@ -442,7 +443,7 @@ class _DrugHistoryState extends State<DrugHistory> {
                 state: TextFieldState.defaultState,
                 hintText: 'Chọn thời gian',
                 controller: endNPDController,
-                icon: Icons.arrow_drop_down_sharp,
+                iconTextInput: Icons.arrow_drop_down_sharp,
               )),
             ],
           ),
