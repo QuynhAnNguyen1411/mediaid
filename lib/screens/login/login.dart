@@ -248,10 +248,10 @@ class _LogInState extends State<LogIn> {
                       : TextFieldState.error,
                   hintText: 'Điền mật khẩu đúng yêu cầu',
                   obscureText: isPasswordObscuredLogIn,
-                  icon: isPasswordObscuredLogIn
+                  iconTextInput: isPasswordObscuredLogIn
                       ? Icons.visibility_off
                       : Icons.visibility,
-                  onTap: () {
+                  onTapIconTextInput: () {
                     setState(() {
                       isPasswordObscuredLogIn = !isPasswordObscuredLogIn;
                     });

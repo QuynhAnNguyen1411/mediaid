@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mediaid/routes.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/surgeryHistory.dart';
-import 'package:mediaid/screens/registration/registration.dart';
-import 'package:mediaid/screens/electronicHealthRecord/personalInformation/recentDrugUseHistory.dart';
-
-import '../../../../components/electronicHealthRecord/tabItem_MedicalInformation.dart';
 import '../../../../design_system/button/button.dart';
+import '../../../../design_system/color/neutral_color.dart';
 import '../../../../design_system/color/primary_color.dart';
 import '../../../../design_system/textstyle/textstyle.dart';
 import 'allergyHistory.dart';
@@ -20,52 +17,19 @@ class PatientHistory extends StatefulWidget {
 
 class PatientHistoryState extends State<PatientHistory>
     with SingleTickerProviderStateMixin {
-  int selectedIndex = 0;
-  late PageController _pageController;
-
+  late TabController _tabController;
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
-  void _onTabSelected(int index) {
-    setState(() {
-      selectedIndex = index; // Cập nhật selectedIndex khi chọn tab mới
-    });
-    _pageController.animateToPage(index,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
-  }
-
-  void _onContinuePressed() {
-    if (selectedIndex == 0) {
-      // Tiền sử bệnh tật -> Tiền sử dị ứng
-      _pageController.animateToPage(1,
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
-      setState(() {
-        selectedIndex = 1;
-      });
-    } else if (selectedIndex == 1) {
-      // Tiền sử dị ứng -> Tiền sử phẫu thuật
-      _pageController.animateToPage(2,
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
-      setState(() {
-        selectedIndex = 2;
-      });
-    } else if (selectedIndex == 2) {
-      // Tiền sử phẫu thuật -> Chuyển sang trang mới
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DrugHistory()),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,54 +95,32 @@ class PatientHistoryState extends State<PatientHistory>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Đăng ký hồ sơ điện tử',
+                  'Tiền sử y tế',
                   style: TextStyleCustom.heading_2a
                       .copyWith(color: PrimaryColor.primary_10),
                 ),
                 SizedBox(height: screenHeight * 0.02),
-                Text(
-                  'Thông tin y tế cơ bản',
-                  style: TextStyleCustom.heading_3a
-                      .copyWith(color: PrimaryColor.primary_10),
-                ),
-                SizedBox(height: screenHeight * 0.02),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TabItem(
-                      title: "Tiền sử\nbệnh tật",
-                      state: selectedIndex == 0
-                          ? TabState.selectedState
-                          : TabState.defaultState,
-                      onTap: () => _onTabSelected(0),
-                    ),
-                    TabItem(
-                      title: "Tiền sử\ndị ứng",
-                      state: selectedIndex == 1
-                          ? TabState.selectedState
-                          : TabState.defaultState,
-                      onTap: () => _onTabSelected(1),
-                    ),
-                    TabItem(
-                      title: "Tiền sử\nphẫu thuật",
-                      state: selectedIndex == 2
-                          ? TabState.selectedState
-                          : TabState.defaultState,
-                      onTap: () => _onTabSelected(2),
-                    ),
+                TabBar(
+                  controller: _tabController,
+                  tabs: [
+                    Tab(text: 'Bệnh tật'),
+                    Tab(text: 'Dị ứng'),
+                    Tab(text: 'Phẫu thuật'),
                   ],
+                  indicatorColor: PrimaryColor.primary_05,
+                  labelColor: PrimaryColor.primary_05,
+                  unselectedLabelColor: NeutralColor.neutral_04,
+                  indicatorWeight: 4.0,
+                  labelStyle: TextStyleCustom.heading_3b
+                      .copyWith(color: PrimaryColor.primary_05),
+                  unselectedLabelStyle: TextStyleCustom.heading_3b
+                      .copyWith(color: NeutralColor.neutral_04),
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.55,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        selectedIndex =
-                            index; // Cập nhật lại selectedIndex khi cuộn trang
-                      });
-                    },
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: TabBarView(
+                    controller: _tabController,
                     children: [
                       MedicalHistory(),
                       AllergyHistory(),
@@ -186,36 +128,68 @@ class PatientHistoryState extends State<PatientHistory>
                     ],
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.02),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: CustomButton(
-                    type: ButtonType.standard,
-                    state: ButtonState.fill2,
-                    text: 'Quay lại',
-                    width: double.infinity,
-                    height: screenHeight * 0.06,
-                    onPressed: () {
-                      Navigator.pushNamed(context, MediaidRoutes.personalInformation);
-                    },
+            SizedBox(height: screenHeight * 0.02),
+            Padding(
+              padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      type: ButtonType.standard,
+                      state: ButtonState.fill2,
+                      text: 'Quay lại',
+                      width: double.infinity,
+                      height: screenHeight * 0.06,
+                      onPressed: () {
+                        if (_tabController.index == 0) {
+                          Navigator.pushNamed(context, MediaidRoutes.electronicHealthRecord);
+                        } else {
+                          _tabController.animateTo(_tabController.index - 1);
+                        }
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(width: screenWidth * 0.02),
-                Expanded(
-                  child: CustomButton(
-                    type: ButtonType.standard,
-                    state: ButtonState.fill1,
-                    text: 'Tiếp tục',
-                    width: double.infinity,
-                    height: screenHeight * 0.06,
-                    onPressed: _onContinuePressed,
-                  ),
-                )
-              ],
+                  SizedBox(width: screenWidth * 0.02),
+                  Expanded(
+                    child: CustomButton(
+                      type: ButtonType.standard,
+                      state: ButtonState.fill1,
+                      text: 'Tiếp tục',
+                      width: double.infinity,
+                      height: screenHeight * 0.06,
+                      onPressed: () {
+                        if (_tabController.index < _tabController.length - 1) {
+                          _tabController.animateTo(_tabController.index + 1);
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: PrimaryColor.primary_00,
+                                elevation: 4.0,
+                                title: Text("Hoàn thành"),
+                                content: Text("Bạn đã hoàn thành việc điền thông tin tiểu sử y tế."),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.pushNamed(context, MediaidRoutes.electronicHealthRecord);
+                                    },
+                                    child: Text("Đóng"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),

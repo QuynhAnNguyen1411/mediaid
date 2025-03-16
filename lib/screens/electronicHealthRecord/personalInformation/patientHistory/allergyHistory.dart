@@ -161,7 +161,7 @@ class _AllergyHistoryState extends State<AllergyHistory>
                 state: TextFieldState.defaultState,
                 hintText: 'Chọn mức độ',
                 controller: allergyLevelController,
-                icon: Icons.arrow_drop_down_sharp,
+                iconTextInput: Icons.arrow_drop_down_sharp,
               )),
               SizedBox(width: screenWidth * 0.04),
               Expanded(
