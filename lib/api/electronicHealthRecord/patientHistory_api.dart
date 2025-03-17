@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mediaid/models/electronicHealthRecord/personalInformation/level.dart';
 
+import '../../models/electronicHealthRecord/personalInformation/electronicHealthRecord.dart';
 import '../../models/electronicHealthRecord/personalInformation/reasonSurgery.dart';
 import '../../models/electronicHealthRecord/personalInformation/treatmentMethod.dart';
 
@@ -52,6 +53,25 @@ class PatientHistoryApi {
       }
     } else {
       print('❌ API thất bại, mã lỗi: ${response.statusCode}');
+    }
+  }
+
+  // Gửi cả form Tiểu sử y tế
+  static Future<void> submitFormHealthRecord(ElectronicHealthRecordForm form) async {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/api/authentication/registry'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(form.toJson()), // Chuyển model thành JSON
+    );
+
+    if (response.statusCode == 200) {
+      // Xử lý khi gửi thành công
+      print('Dữ liệu đã được gửi thành công!');
+    } else {
+      // Xử lý khi có lỗi
+      print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
     }
   }
 }

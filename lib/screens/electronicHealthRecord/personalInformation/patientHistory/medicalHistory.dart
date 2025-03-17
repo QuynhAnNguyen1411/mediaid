@@ -364,7 +364,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
                         ),
                       ],
                     ),
-                    SizedBox(height: screenHeight * 0.005),
+                    SizedBox(height: screenHeight * 0.01),
                     DropdownButtonFormField<int>(
                       value: _selectedMucdoId,
                       hint: Text(
@@ -411,11 +411,10 @@ class _MedicalHistoryState extends State<MedicalHistory>
               ),
             ],
           ),
-          SizedBox(height: screenHeight * 0.02),
           Padding(
             padding: EdgeInsets.only(top: screenHeight * 0.02, bottom: screenHeight * 0.02),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -628,17 +627,16 @@ class _MedicalHistoryState extends State<MedicalHistory>
                     ),
                   ],
                 ),
-                SizedBox(height: screenHeight * 0.005),
+                SizedBox(height: screenHeight * 0.01),
                 DropdownButtonFormField<int>(
                   value: _selectedPhuongphapdieutriId,
                   hint: Text(
                     'Chọn phương pháp điều trị',
                     style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
                   ),
-                  isExpanded: false,
+                  isExpanded: true,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.03, vertical: screenHeight * 0.018),
+                    // contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03, vertical: screenHeight * 0.018),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
@@ -673,7 +671,6 @@ class _MedicalHistoryState extends State<MedicalHistory>
               ],
             ),
           ),
-          SizedBox(height: screenHeight * 0.02),
           CustomTextInput(
             type: TextFieldType.text,
             state: TextFieldState.defaultState,
@@ -706,14 +703,8 @@ class _MedicalHistoryState extends State<MedicalHistory>
   }
 
   Widget buildFamilyHistoryForm() {
-    var screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
       margin: EdgeInsets.only(top: screenHeight * 0.01),
       padding: EdgeInsets.symmetric(
@@ -735,7 +726,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
           ),
           SizedBox(height: screenHeight * 0.02),
           CustomTextInput(
-            label: 'Thành viên trong gia đình mắc bệnh',
+            label: 'Thành viên gia đình mắc bệnh',
             type: TextFieldType.text,
             state: TextFieldState.defaultState,
             hintText: 'Điền mối quan hệ',
@@ -757,81 +748,125 @@ class _MedicalHistoryState extends State<MedicalHistory>
               ),
               SizedBox(width: screenWidth * 0.04),
               Expanded(
-                child: CustomTextInput(
-                  label: 'Mức độ',
-                  iconLabel: SvgPicture.asset(
-                    "assets/icons/electronicHealthRecord/info.svg",
-                    color: StatusColor.errorLighter,
-                  ),
-                  onTapIconLabel: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Mức độ tình trạng bệnh",
-                                style: TextStyleCustom.heading_3c),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  // Nhẹ
-                                  Text(
-                                    "• Nhẹ:",
-                                    style: TextStyleCustom.bodyLarge.copyWith(
-                                        color: PrimaryColor.primary_10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Mức độ',
+                          style: TextStyleCustom.heading_3b.copyWith(color: PrimaryColor.primary_10),
+                        ),
+                        GestureDetector( // Thêm GestureDetector để xử lý sự kiện onTap
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Mức độ tình trạng bệnh", style: TextStyleCustom.heading_3c),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        // Nhẹ
+                                        Text(
+                                          "• Nhẹ:",
+                                          style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_10),
+                                        ),
+                                        Text(
+                                          "Bệnh không ảnh hưởng nhiều đến cuộc sống, không cần điều trị đặc biệt.",
+                                          style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                                        ),
+                                        SizedBox(height: screenHeight * 0.015),
+                                        // Vừa
+                                        Text(
+                                          "• Vừa:",
+                                          style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_10),
+                                        ),
+                                        Text(
+                                          "Bệnh có thay đổi nhưng vẫn kiểm soát được, cần điều trị theo dõi.",
+                                          style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                                        ),
+                                        SizedBox(height: screenHeight * 0.015),
+                                        // Nặng
+                                        Text(
+                                          "• Nặng:",
+                                          style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_10),
+                                        ),
+                                        Text(
+                                          "Bệnh tiến triển nghiêm trọng, cần điều trị chuyên sâu và theo dõi thường xuyên.",
+                                          style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Text(
-                                    "Bệnh không ảnh hưởng nhiều đến cuộc sống, không cần điều trị đặc biệt.",
-                                    style: TextStyleCustom.bodySmall.copyWith(
-                                        color: NeutralColor.neutral_06),
-                                  ),
-                                  SizedBox(height: screenHeight * 0.015),
-                                  // Vừa
-                                  Text(
-                                    "• Vừa:",
-                                    style: TextStyleCustom.bodyLarge.copyWith(
-                                        color: PrimaryColor.primary_10),
-                                  ),
-                                  Text(
-                                    "Bệnh có thay đổi nhưng vẫn kiểm soát được, cần điều trị theo dõi.",
-                                    style: TextStyleCustom.bodySmall.copyWith(
-                                        color: NeutralColor.neutral_06),
-                                  ),
-                                  SizedBox(height: screenHeight * 0.015),
-                                  // Nặng
-                                  Text(
-                                    "• Nặng:",
-                                    style: TextStyleCustom.bodyLarge.copyWith(
-                                        color: PrimaryColor.primary_10),
-                                  ),
-                                  Text(
-                                    "Bệnh tiến triển nghiêm trọng, cần điều trị chuyên sâu và theo dõi thường xuyên.",
-                                    style: TextStyleCustom.bodySmall.copyWith(
-                                        color: NeutralColor.neutral_06),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(); // Đóng dialog
-                                },
-                                child: Text("Đóng",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.blue)),
-                              ),
-                            ],
-                          );
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(); // Đóng dialog
+                                      },
+                                      child: Text("Đóng", style: TextStyle(fontSize: 16, color: Colors.blue)),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: SvgPicture.asset(
+                            "assets/icons/electronicHealthRecord/info.svg",
+                            color: StatusColor.errorLighter,
+                            width: screenWidth * 0.06,
+                            height: screenHeight * 0.03,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight * 0.005),
+                    DropdownButtonFormField<int>(
+                      value: _selectedMucdoId,
+                      hint: Text(
+                        'Chọn mức độ',
+                        style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                      ),
+                      isExpanded: false,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.03, vertical: screenHeight * 0.018),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: NeutralColor.neutral_04,
+                            width: screenWidth * 0.004,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: NeutralColor.neutral_04,
+                            width: screenWidth * 0.004,
+                          ),
+                        ),
+                      ),
+                      dropdownColor: PrimaryColor.primary_00,
+                      items: mucDoList.map((mucDo) {
+                        return DropdownMenuItem<int>(
+                          value: mucDo.levelID,
+                          child: Text(
+                            mucDo.levelName,
+                            style: TextStyleCustom.bodySmall.copyWith(color: PrimaryColor.primary_10),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedMucdoId = value;
                         });
-                  },
-                  type: TextFieldType.textIconRight,
-                  state: TextFieldState.defaultState,
-                  hintText: 'Chọn mức độ',
-                  controller: medicalLevelFMController,
-                  iconTextInput: Icons.arrow_drop_down_sharp,
+                      },
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
           SizedBox(height: screenHeight * 0.02),

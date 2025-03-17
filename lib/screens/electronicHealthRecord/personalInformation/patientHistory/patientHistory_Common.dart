@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mediaid/models/electronicHealthRecord/personalInformation/electronicHealthRecord.dart';
 import 'package:mediaid/routes.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/surgeryHistory.dart';
+import '../../../../api/electronicHealthRecord/patientHistory_api.dart';
 import '../../../../design_system/button/button.dart';
 import '../../../../design_system/color/neutral_color.dart';
 import '../../../../design_system/color/primary_color.dart';
@@ -18,6 +20,35 @@ class PatientHistory extends StatefulWidget {
 class PatientHistoryState extends State<PatientHistory>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  // Các biến lưu trữ dữ liệu của các form
+  String typeOfDisease = '';
+  String yearOfDiagnosis = '';
+  int medicalLevel = 0;
+  int treatmentMethod = 0;
+  String complications = '';
+  String hospitalTreatment = '';
+  String noteDisease = '';
+
+  String geneticDisease = '';
+  String relationshipFM = '';
+  String yearOfDiseaseFM = '';
+  int medicalLevelFM = 0;
+  String noteDiseaseFM = '';
+
+
+  String allergicAgents = '';
+  String allergySymptoms = '';
+  int allergyLevel = 0;
+  String lastHappened = '';
+  String noteAllergy = '';
+
+  String nameSurgery = '';
+  int reasonSurgery = 0;
+  int surgeryLevel = 0;
+  String timeSurgery = '';
+  String surgicalHospital = '';
+  String complicationSurgery = '';
+  String noteSurgery = '';
   @override
   void initState() {
     super.initState();
@@ -29,6 +60,45 @@ class PatientHistoryState extends State<PatientHistory>
     _tabController.dispose();
     super.dispose();
   }
+
+  Future<void> _submitFormHealthRecord() async {
+    ElectronicHealthRecordForm form = ElectronicHealthRecordForm(
+        typeOfDisease: typeOfDisease,
+        yearOfDiagnosis: yearOfDiagnosis,
+        medicalLevel: medicalLevel,
+        treatmentMethod: treatmentMethod,
+        complications: complications,
+        hospitalTreatment: hospitalTreatment,
+        noteDisease: noteDisease,
+        geneticDisease: geneticDisease,
+        relationshipFM: relationshipFM,
+        yearOfDiseaseFM: yearOfDiseaseFM,
+        medicalLevelFM: medicalLevelFM,
+        noteDiseaseFM: noteDiseaseFM,
+        allergicAgents: allergicAgents,
+        allergySymptoms: allergySymptoms,
+        allergyLevel: allergyLevel,
+        lastHappened: lastHappened,
+        noteAllergy: noteAllergy,
+        nameSurgery: nameSurgery,
+        reasonSurgery: reasonSurgery,
+        surgeryLevel: surgeryLevel,
+        timeSurgery: timeSurgery,
+        surgicalHospital: surgicalHospital,
+        complicationSurgery: complicationSurgery,
+        noteSurgery: noteSurgery
+    );
+    // Gửi form đến API
+    try {
+      print(form.toJson());
+      await PatientHistoryApi.submitFormHealthRecord(form);
+        } catch (e) {
+      print('Error occurred while submitting form: $e');
+    }
+
+  }
+
+
 
 
   @override
@@ -176,6 +246,7 @@ class PatientHistoryState extends State<PatientHistory>
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
+                                      _submitFormHealthRecord();
                                       Navigator.pushNamed(context, MediaidRoutes.electronicHealthRecord);
                                     },
                                     child: Text("Đóng"),

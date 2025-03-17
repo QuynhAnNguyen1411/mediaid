@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
 
+import '../../../../api/electronicHealthRecord/patientHistory_api.dart';
 import '../../../../design_system/button/button.dart';
+import '../../../../design_system/color/neutral_color.dart';
 import '../../../../design_system/color/status_color.dart';
 import '../../../../design_system/input_field/text_input.dart';
 import '../../../../design_system/textstyle/textstyle.dart';
+import '../../../../models/electronicHealthRecord/personalInformation/level.dart';
 
 class AllergyHistory extends StatefulWidget {
   const AllergyHistory({super.key});
@@ -31,11 +35,40 @@ class _AllergyHistoryState extends State<AllergyHistory>
   // Danh sách chứa các form nhập liệu
   List<Widget> allergyHistoryForms = [];
 
+  //Dropdown
+  late List<Level> mucDoList = [];
+  int? _selectedMucdoId;
+
   // Hàm thêm form mới vào danh sách
   void _toggleAllergyHistory() {
     setState(() {
       allergyHistoryForms.add(buildAllergyHistoryForm());
     });
+  }
+
+  Future<void> _fetchDropdownDataAllergyHistory() async {
+    try {
+      Map<String, List<Object>>? response =
+      await PatientHistoryApi.getStaticDataForPatientHistory();
+
+      if (response != null) {
+        print("a");
+        setState(() {
+          mucDoList = (response['mucDo'] as List<Level>).toList();
+        });
+
+        print("✅ Đã cập nhật danh sách Mức độ: $mucDoList");
+      } else {
+        print("❌ Lỗi API: ${response}");
+      }
+    } catch (e) {
+      print("❌ Lỗi khi gọi API: $e");
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    _fetchDropdownDataAllergyHistory();
   }
 
   @override
@@ -155,18 +188,129 @@ class _AllergyHistoryState extends State<AllergyHistory>
           Row(
             children: [
               Expanded(
-                  child: CustomTextInput(
-                label: 'Mức độ',
-                type: TextFieldType.textIconRight,
-                state: TextFieldState.defaultState,
-                hintText: 'Chọn mức độ',
-                controller: allergyLevelController,
-                iconTextInput: Icons.arrow_drop_down_sharp,
-              )),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Mức độ',
+                          style: TextStyleCustom.heading_3b.copyWith(color: PrimaryColor.primary_10),
+                        ),
+                        GestureDetector( // Thêm GestureDetector để xử lý sự kiện onTap
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Mức độ tình trạng dị ứng", style: TextStyleCustom.heading_3c),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        // Nhẹ
+                                        Text(
+                                          "• Dị ứng nhẹ:",
+                                          style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_10),
+                                        ),
+                                        Text(
+                                          "Ngứa, phát ban, chảy nước mũi, hắt hơi, ngứa mắt.",
+                                          style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                                        ),
+                                        SizedBox(height: screenHeight * 0.015),
+                                        // Vừa
+                                        Text(
+                                          "• Dị ứng vừa:",
+                                          style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_10),
+                                        ),
+                                        Text(
+                                          "Phát ban sưng tấy, khó thở nhẹ, chóng mặt, nôn mửa hoặc tiêu chảy.",
+                                          style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                                        ),
+                                        SizedBox(height: screenHeight * 0.015),
+                                        // Nặng
+                                        Text(
+                                          "• Dị ứng nặng:",
+                                          style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_10),
+                                        ),
+                                        Text(
+                                          "Khó thở nghiêm trọng, sưng môi, mắt, mặt, lưỡi, sốc phản vệ, tụt huyết áp, mất ý thức.",
+                                          style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(); // Đóng dialog
+                                      },
+                                      child: Text("Đóng", style: TextStyle(fontSize: 16, color: Colors.blue)),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: SvgPicture.asset(
+                            "assets/icons/electronicHealthRecord/info.svg",
+                            color: StatusColor.errorLighter,
+                            width: screenWidth * 0.06,
+                            height: screenHeight * 0.03,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight * 0.005),
+                    DropdownButtonFormField<int>(
+                      value: _selectedMucdoId,
+                      hint: Text(
+                        'Chọn mức độ',
+                        style: TextStyleCustom.bodySmall.copyWith(color: NeutralColor.neutral_06),
+                      ),
+                      isExpanded: false,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.03, vertical: screenHeight * 0.018),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: NeutralColor.neutral_04,
+                            width: screenWidth * 0.004,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: NeutralColor.neutral_04,
+                            width: screenWidth * 0.004,
+                          ),
+                        ),
+                      ),
+                      dropdownColor: PrimaryColor.primary_00,
+                      items: mucDoList.map((mucDo) {
+                        return DropdownMenuItem<int>(
+                          value: mucDo.levelID,
+                          child: Text(
+                            mucDo.levelName,
+                            style: TextStyleCustom.bodySmall.copyWith(color: PrimaryColor.primary_10),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedMucdoId = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(width: screenWidth * 0.04),
               Expanded(
                   child: CustomTextInput(
-                label: 'Lần cuối xảy ra',
+                label: 'Lần gần nhất',
                 type: TextFieldType.text,
                 state: TextFieldState.defaultState,
                 hintText: 'Điền thời gian',
