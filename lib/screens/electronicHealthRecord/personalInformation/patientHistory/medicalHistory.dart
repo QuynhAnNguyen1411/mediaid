@@ -105,14 +105,8 @@ class _MedicalHistoryState extends State<MedicalHistory>
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,14 +245,9 @@ class _MedicalHistoryState extends State<MedicalHistory>
   }
 
   Widget buildMedicalHistoryForm() {
-    var screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       margin: EdgeInsets.only(top: screenHeight * 0.015),
       padding: EdgeInsets.all(16),
@@ -348,7 +337,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
                                       onPressed: () {
                                         Navigator.of(context).pop(); // Đóng dialog
                                       },
-                                      child: Text("Đóng", style: TextStyle(fontSize: 16, color: Colors.blue)),
+                                      child: Text("Đóng", style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_05)),
                                     ),
                                   ],
                                 );
@@ -806,7 +795,7 @@ class _MedicalHistoryState extends State<MedicalHistory>
                                       onPressed: () {
                                         Navigator.of(context).pop(); // Đóng dialog
                                       },
-                                      child: Text("Đóng", style: TextStyle(fontSize: 16, color: Colors.blue)),
+                                      child: Text("Đóng", style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_05)),
                                     ),
                                   ],
                                 );

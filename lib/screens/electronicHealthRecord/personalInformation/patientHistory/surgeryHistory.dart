@@ -349,7 +349,7 @@ class _SurgeryHistoryState extends State<SurgeryHistory>
                                   onPressed: () {
                                     Navigator.of(context).pop(); // Đóng dialog
                                   },
-                                  child: Text("Đóng", style: TextStyle(fontSize: 16, color: Colors.blue)),
+                                  child: Text("Đóng", style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_05)),
                                 ),
                               ],
                             );
@@ -471,7 +471,7 @@ class _SurgeryHistoryState extends State<SurgeryHistory>
                                       onPressed: () {
                                         Navigator.of(context).pop(); // Đóng dialog
                                       },
-                                      child: Text("Đóng", style: TextStyle(fontSize: 16, color: Colors.blue)),
+                                      child: Text("Đóng", style: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_05)),
                                     ),
                                   ],
                                 );

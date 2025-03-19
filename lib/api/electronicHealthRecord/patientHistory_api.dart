@@ -6,13 +6,16 @@ import 'package:mediaid/models/electronicHealthRecord/personalInformation/level.
 import '../../models/electronicHealthRecord/personalInformation/electronicHealthRecord.dart';
 import '../../models/electronicHealthRecord/personalInformation/reasonSurgery.dart';
 import '../../models/electronicHealthRecord/personalInformation/treatmentMethod.dart';
+import '../../models/electronicHealthRecord/personalInformation/workingEnvironment.dart';
 
 class PatientHistoryApi {
   // Phương pháp điều trị - Tiểu sử bệnh tật
   // Mức độ - Tiền sử bệnh tật, dị ứng và phẫu thuật
   // Lý do phẫu thuật - Tiền sử phẫu thuật
-  static Future<Map<String, List<Object>>?> getStaticDataForPatientHistory() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/static/staticDataForTieuSuYTe'));
+  static Future<Map<String, List<Object>>?>
+      getStaticDataForPatientHistory() async {
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2:8080/api/static/staticDataForTieuSuYTe'));
 
     if (response.statusCode == 200) {
       try {
@@ -29,24 +32,33 @@ class PatientHistoryApi {
         }
 
         List<ReasonSurgery> lyDoPhauThuatList = [];
-        if (data['lyDoPhauThuatDTO'] != null && data['lyDoPhauThuatDTO'] is List) {
+        if (data['lyDoPhauThuatDTO'] != null &&
+            data['lyDoPhauThuatDTO'] is List) {
           for (var e in (data['lyDoPhauThuatDTO'] as List)) {
-            ReasonSurgery reasonSurgery = ReasonSurgery(reasonSurgeryID: e['id'], reasonSurgeryName: e['ten']);
+            ReasonSurgery reasonSurgery = ReasonSurgery(
+                reasonSurgeryID: e['id'], reasonSurgeryName: e['ten']);
             lyDoPhauThuatList.add(reasonSurgery);
           }
         }
 
         List<TreatmentMethod> phuongPhapDieuTriList = [];
-        if (data['phuongPhapDieuTriDTO'] != null && data['phuongPhapDieuTriDTO'] is List) {
+        if (data['phuongPhapDieuTriDTO'] != null &&
+            data['phuongPhapDieuTriDTO'] is List) {
           for (var e in (data['phuongPhapDieuTriDTO'] as List)) {
-            TreatmentMethod treatmentMethod = TreatmentMethod(treatmentMethodID: e['id'], treatmentMethodName: e['ten']);
+            TreatmentMethod treatmentMethod = TreatmentMethod(
+                treatmentMethodID: e['id'], treatmentMethodName: e['ten']);
             phuongPhapDieuTriList.add(treatmentMethod);
           }
         }
 
-        print(mucDoList.length+lyDoPhauThuatList.length+phuongPhapDieuTriList.length);
-        return {"mucDo": mucDoList, "lyDoPhauThuat": lyDoPhauThuatList, "phuongPhapDieuTri":phuongPhapDieuTriList};
-
+        print(mucDoList.length +
+            lyDoPhauThuatList.length +
+            phuongPhapDieuTriList.length);
+        return {
+          "mucDo": mucDoList,
+          "lyDoPhauThuat": lyDoPhauThuatList,
+          "phuongPhapDieuTri": phuongPhapDieuTriList
+        };
       } catch (e) {
         throw Exception('❌ Lỗi xử lý JSON: $e');
         return null;
@@ -56,8 +68,39 @@ class PatientHistoryApi {
     }
   }
 
+  // Môi trường làm việc - Khảo sát lối sống
+  static Future<Map<String, List<Object>>?> getStaticDataForLifestyleSurvey() async {
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2:8080/api/static/staticDataForTieuSuYTe'));
+    if (response.statusCode == 200) {
+      try {
+        String responseBody = utf8.decode(response.bodyBytes);
+        Map<String, dynamic> data = jsonDecode(responseBody);
+        print(data);
+
+        List<WorkingEnvironment> moiTruongLamViecList = [];
+        if (data['moiTruongLamViecDTO'] != null && data['moiTruongLamViecDTO'] is List) {
+          for (var e in (data['moiTruongLamViecDTO'] as List)) {
+            WorkingEnvironment workingEnvironment = WorkingEnvironment(workingEnvironmentID: e['id'], workingEnvironmentName: e['ten']);
+            moiTruongLamViecList.add(workingEnvironment);
+          }
+        }
+
+        print(moiTruongLamViecList.length);
+        return {"moiTruongLamViec": moiTruongLamViecList};
+      } catch (e) {
+        throw Exception('❌ Lỗi xử lý JSON: $e');
+        return null;
+      }
+    } else {
+      print('❌ API thất bại, mã lỗi: ${response.statusCode}');
+    }
+    return null;
+  }
+
   // Gửi cả form Tiểu sử y tế
-  static Future<void> submitFormHealthRecord(ElectronicHealthRecordForm form) async {
+  static Future<void> submitFormHealthRecord(
+      ElectronicHealthRecordForm form) async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:8080/api/authentication/registry'),
       headers: {

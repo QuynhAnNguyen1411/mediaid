@@ -91,6 +91,16 @@ flutter:
     - assets/icons/electronicHealthRecord/notes.svg
     - assets/images/registration/success_dialog.jpg
     - assets/icons/electronicHealthRecord/info.svg
+    - assets/icons/setExaminationNumber/abdomen-front-man.svg
+    - assets/icons/setExaminationNumber/chest-front-man.svg
+    - assets/icons/setExaminationNumber/head-front-man.svg
+    - assets/icons/setExaminationNumber/left-foot-front-man.svg
+    - assets/icons/setExaminationNumber/left-hand-front-man.svg
+    - assets/icons/setExaminationNumber/male-genitalia-front-man.svg
+    - assets/icons/setExaminationNumber/neck-front-man.svg
+    - assets/icons/setExaminationNumber/right-foot-front-man.svg
+    - assets/icons/setExaminationNumber/right-hand-front-man.svg
+    - assets/images/setExaminationNumber/front-body-man.png
 
 
   fonts:

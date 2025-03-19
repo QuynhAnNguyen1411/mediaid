@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mediaid/screens/electronicHealthRecord/electronicHealthRecord.dart';
 import 'package:mediaid/screens/electronicHealthRecord/medicalRecord/medicalRecord.dart';
 import 'package:mediaid/screens/electronicHealthRecord/medicalRecord/medicalRecordList.dart';
+import 'package:mediaid/screens/electronicHealthRecord/personalInformation/lifestyleSurvey.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/allergyHistory.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/medicalHistory.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/patientHistory_Common.dart';
@@ -31,6 +32,7 @@ class MediaidRoutes {
   static const String medicalHistory = '/medicalHistory';
   static const String surgeryHistory = '/surgeryHistory';
   static const String drugHistory = '/drugHistory';
+  static const String lifestyleSurvey = '/lifestyleSurvey';
   static const String medicalRecord = '/medicalRecord';
   static const String medicalRecordList = '/medicalRecordList';
   static const String humanBody = '/humanBody';
@@ -63,6 +65,8 @@ class MediaidRoutes {
         return MaterialPageRoute(builder: (_) => SurgeryHistory());
       case drugHistory:
         return MaterialPageRoute(builder: (_) => DrugHistory());
+      case lifestyleSurvey:
+        return MaterialPageRoute(builder: (_) => LifestyleSurvey());
       case medicalRecord:
         return MaterialPageRoute(builder: (_) => MedicalRecord());
       case medicalRecordList:

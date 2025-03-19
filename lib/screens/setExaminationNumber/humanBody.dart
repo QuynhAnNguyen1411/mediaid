@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../design_system/color/primary_color.dart';
 import '../../design_system/textstyle/textstyle.dart';
@@ -13,28 +14,41 @@ class HumanBody extends StatefulWidget {
 }
 
 class _HumanBodyState extends State<HumanBody> {
-  final List<Map<String, dynamic>> markers = [
-    {"x": 0.5, "y": 0.2, "label": "Đầu", "clinic": "Khoa Thần Kinh"},
-    {"x": 0.5, "y": 0.4, "label": "Ngực", "clinic": "Khoa Tim Mạch"},
-    {"x": 0.5, "y": 0.6, "label": "Bụng", "clinic": "Khoa Tiêu Hóa"},
-    {"x": 0.5, "y": 0.8, "label": "Chân", "clinic": "Khoa Xương Khớp"},
+  List<String> bodyParts = [
+    'assets/icons/setExaminationNumber/head-front-man.svg',
+    'assets/icons/setExaminationNumber/neck-front-man.svg',
+    'assets/icons/setExaminationNumber/chest-front-man.svg',
+    'assets/icons/setExaminationNumber/abdomen-front-man.svg',
+    'assets/icons/setExaminationNumber/left-hand-front-man.svg',
+    'assets/icons/setExaminationNumber/right-hand-front-man.svg',
+    'assets/icons/setExaminationNumber/male-genitalia-front-man.svg',
+    'assets/icons/setExaminationNumber/left-foot-front-man.svg',
+    'assets/icons/setExaminationNumber/right-foot-front-man.svg',
   ];
 
-  void _showClinicDialog(String part, String clinic) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Chọn bộ phận: $part"),
-        content: Text("Phòng khám phù hợp: $clinic"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
-          ),
-        ],
-      ),
-    );
+  List<Color> colorBodyParts = List.generate(9, (index) => Colors.transparent);
+
+  void onPartTapped(int index) {
+    setState(() {
+      colorBodyParts[index] = PrimaryColor.primary_01.withOpacity(0.5);
+    });
   }
+
+  // void _showClinicDialog(String part, String clinic) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: Text("Chọn bộ phận: $part"),
+  //       content: Text("Phòng khám phù hợp: $clinic"),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(context),
+  //           child: Text("OK"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -44,7 +58,7 @@ class _HumanBodyState extends State<HumanBody> {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.035),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SafeArea(
               child: Row(
@@ -103,26 +117,29 @@ class _HumanBodyState extends State<HumanBody> {
                   .copyWith(color: PrimaryColor.primary_10),
             ),
             SizedBox(height: screenHeight * 0.03),
-            Stack(
-              children: [
-                SizedBox(
-                  width: screenWidth * 0.6,
-                  height: screenHeight * 0.6,
-                  child: Image.asset(
-                    "assets/images/setExaminationNumber/body_man_front.jpg",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                // Hiển thị các điểm đánh dấu
-                ...markers.map((marker) => Positioned(
-                  left: marker["x"] * MediaQuery.of(context).size.width,
-                  top: marker["y"] * MediaQuery.of(context).size.height,
-                  child: GestureDetector(
-                    onTap: () => _showClinicDialog(marker["label"], marker["clinic"]),
-                    child: Icon(Icons.location_on, color: Colors.red, size: 30),
-                  ),
-                )),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return Stack(
+                  children: [
+                    Image.asset(
+                      "assets/images/setExaminationNumber/front-body-man.png",
+                      
+                      fit: BoxFit.cover,
+                    ),
+                    // Positioned(
+                    //   top: height * 0.2,
+                    //   left: width * 0.3,
+                    //   child: GestureDetector(
+                    //     onTap: () => onPartTapped(0),
+                    //     child: SvgPicture.asset(
+                    //       bodyParts[0],
+                    //       color: Colors.red,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                );
+              }
             )
           ],
         ),

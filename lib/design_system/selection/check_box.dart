@@ -6,7 +6,7 @@ import 'package:mediaid/design_system/textstyle/textstyle.dart';
 class CustomCheckbox extends StatelessWidget {
   final bool isChecked;
   final bool isDisabled;
-  final String? label; // String hoặc null đều được
+  final String? label;
   final ValueChanged<bool>? onChanged;
 
   const CustomCheckbox({

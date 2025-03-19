@@ -6,6 +6,7 @@ import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patie
 import 'package:mediaid/screens/registration/registration.dart';
 
 import '../../../components/electronicHealthRecord/medicalInformationCard.dart';
+import '../../../routes.dart';
 
 class PersonalInformation extends StatelessWidget {
   const PersonalInformation({super.key});
@@ -130,11 +131,7 @@ class PersonalInformation extends StatelessWidget {
                             'assets/icons/electronicHealthRecord/medical_history.svg',
                         label: 'Tiểu sử y tế',
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PatientHistory()),
-                          );
+                          Navigator.pushNamed(context, MediaidRoutes.patientHistory);
                         },
                       ),
                     ),
@@ -144,7 +141,9 @@ class PersonalInformation extends StatelessWidget {
                         svgAssetPath:
                             'assets/icons/electronicHealthRecord/drug_history.svg',
                         label: 'Tiểu sử thuốc',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, MediaidRoutes.drugHistory);
+                        },
                       ),
                     ),
                     SizedBox(width: screenWidth * 0.005),
@@ -153,7 +152,9 @@ class PersonalInformation extends StatelessWidget {
                         svgAssetPath:
                             'assets/icons/electronicHealthRecord/lifestyle.svg',
                         label: 'Lối sống',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, MediaidRoutes.lifestyleSurvey);
+                        },
                       ),
                     )
                   ],
