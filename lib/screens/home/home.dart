@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:mediaid/components/home/bottom_nav_bar.dart';
 import 'package:mediaid/design_system/button/button.dart';
+import 'package:mediaid/design_system/color/neutral_color.dart';
 import 'package:mediaid/design_system/color/status_color.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/routes.dart';
 import 'package:mediaid/screens/electronicHealthRecord/electronicHealthRecord.dart';
+import 'package:mediaid/screens/setExaminationNumber/humanBody.dart';
 import '../../components/home/examinationHistoryCard.dart';
 import '../../design_system/color/primary_color.dart';
 
@@ -19,18 +22,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _screens = [
-    Home(),
-    ElectronicHealthRecord(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +122,7 @@ class _HomeState extends State<Home> {
                             SizedBox(width: screenWidth * 0.015),
                             Text(
                               'Tầm soát ung thư',
-                              style: TextStyleCustom.bodyLarge
+                              style: TextStyleCustom.bodySmall
                                   .copyWith(color: PrimaryColor.primary_05),
                             ),
                           ],
@@ -165,7 +156,7 @@ class _HomeState extends State<Home> {
                             SizedBox(width: screenWidth * 0.015),
                             Text(
                               'Đăng ký khám',
-                              style: TextStyleCustom.bodyLarge
+                              style: TextStyleCustom.bodySmall
                                   .copyWith(color: PrimaryColor.primary_05),
                             ),
                           ],
@@ -192,7 +183,8 @@ class _HomeState extends State<Home> {
                       width: screenWidth * 0.03,
                       height: screenHeight * 0.06,
                       onPressed: () {
-                        Navigator.pushNamed(context, MediaidRoutes.medicalRecord);
+                        Navigator.pushNamed(
+                            context, MediaidRoutes.medicalRecord);
                       },
                     )
                   ],
@@ -232,10 +224,6 @@ class _HomeState extends State<Home> {
             )
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }

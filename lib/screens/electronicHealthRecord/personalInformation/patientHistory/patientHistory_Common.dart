@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mediaid/models/electronicHealthRecord/personalInformation/electronicHealthRecord.dart';
 import 'package:mediaid/routes.dart';
+import 'package:mediaid/screens/electronicHealthRecord/electronicHealthRecord.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/surgeryHistory.dart';
 import '../../../../api/electronicHealthRecord/patientHistory_api.dart';
 import '../../../../design_system/button/button.dart';
@@ -60,46 +61,6 @@ class PatientHistoryState extends State<PatientHistory>
     _tabController.dispose();
     super.dispose();
   }
-
-  Future<void> _submitFormHealthRecord() async {
-    ElectronicHealthRecordForm form = ElectronicHealthRecordForm(
-        typeOfDisease: typeOfDisease,
-        yearOfDiagnosis: yearOfDiagnosis,
-        medicalLevel: medicalLevel,
-        treatmentMethod: treatmentMethod,
-        complications: complications,
-        hospitalTreatment: hospitalTreatment,
-        noteDisease: noteDisease,
-        geneticDisease: geneticDisease,
-        relationshipFM: relationshipFM,
-        yearOfDiseaseFM: yearOfDiseaseFM,
-        medicalLevelFM: medicalLevelFM,
-        noteDiseaseFM: noteDiseaseFM,
-        allergicAgents: allergicAgents,
-        allergySymptoms: allergySymptoms,
-        allergyLevel: allergyLevel,
-        lastHappened: lastHappened,
-        noteAllergy: noteAllergy,
-        nameSurgery: nameSurgery,
-        reasonSurgery: reasonSurgery,
-        surgeryLevel: surgeryLevel,
-        timeSurgery: timeSurgery,
-        surgicalHospital: surgicalHospital,
-        complicationSurgery: complicationSurgery,
-        noteSurgery: noteSurgery
-    );
-    // Gửi form đến API
-    try {
-      print(form.toJson());
-      await PatientHistoryApi.submitFormHealthRecord(form);
-        } catch (e) {
-      print('Error occurred while submitting form: $e');
-    }
-
-  }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -214,11 +175,10 @@ class PatientHistoryState extends State<PatientHistory>
                       width: double.infinity,
                       height: screenHeight * 0.06,
                       onPressed: () {
-                        if (_tabController.index == 0) {
-                          Navigator.pushNamed(context, MediaidRoutes.electronicHealthRecord);
-                        } else {
-                          _tabController.animateTo(_tabController.index - 1);
-                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ElectronicHealthRecord()),
+                        );
                       },
                     ),
                   ),
@@ -230,33 +190,7 @@ class PatientHistoryState extends State<PatientHistory>
                       text: 'Tiếp tục',
                       width: double.infinity,
                       height: screenHeight * 0.06,
-                      onPressed: () {
-                        if (_tabController.index < _tabController.length - 1) {
-                          _tabController.animateTo(_tabController.index + 1);
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: PrimaryColor.primary_00,
-                                elevation: 4.0,
-                                title: Text("Hoàn thành"),
-                                content: Text("Bạn đã hoàn thành việc điền thông tin tiểu sử y tế."),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      _submitFormHealthRecord();
-                                      Navigator.pushNamed(context, MediaidRoutes.electronicHealthRecord);
-                                    },
-                                    child: Text("Đóng"),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
+                      onPressed: () {},
                     ),
                   )
                 ],

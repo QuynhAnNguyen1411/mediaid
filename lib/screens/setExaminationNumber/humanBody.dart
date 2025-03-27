@@ -4,33 +4,83 @@ import 'package:flutter_svg/svg.dart';
 import '../../design_system/color/primary_color.dart';
 import '../../design_system/textstyle/textstyle.dart';
 
-class HumanBody extends StatefulWidget {
-  const HumanBody({super.key});
+class FrontManBody extends StatefulWidget {
+  const FrontManBody({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _HumanBodyState();
+    return _FrontManBodyState();
   }
 }
 
-class _HumanBodyState extends State<HumanBody> {
+class _FrontManBodyState extends State<FrontManBody> {
   List<String> bodyParts = [
-    'assets/icons/setExaminationNumber/head-front-man.svg',
-    'assets/icons/setExaminationNumber/neck-front-man.svg',
-    'assets/icons/setExaminationNumber/chest-front-man.svg',
-    'assets/icons/setExaminationNumber/abdomen-front-man.svg',
-    'assets/icons/setExaminationNumber/left-hand-front-man.svg',
-    'assets/icons/setExaminationNumber/right-hand-front-man.svg',
-    'assets/icons/setExaminationNumber/male-genitalia-front-man.svg',
-    'assets/icons/setExaminationNumber/left-foot-front-man.svg',
-    'assets/icons/setExaminationNumber/right-foot-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/head-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/neck-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/chest-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/abdomen-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/left-hand-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/right-hand-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/male-genitalia-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/left-foot-front-man.svg',
+    'assets/icons/setExaminationNumber/front-man/right-foot-front-man.svg',
   ];
 
   List<Color> colorBodyParts = List.generate(9, (index) => Colors.transparent);
 
-  void onPartTapped(int index) {
+  bool isHeadFrontSelected = false;
+  bool isNeckFrontSelected = false;
+  bool isChestFrontSelected = false;
+  bool isAbdomenFrontSelected = false;
+  bool isLeftHandFrontSelected = false;
+  bool isRightHandFrontSelected = false;
+  bool isMaleGenitaliaFrontSelected = false;
+  bool isLeftFootFrontSelected = false;
+  bool isRightFootFrontSelected = false;
+
+  void toggleHeadFrontColor() {
     setState(() {
-      colorBodyParts[index] = PrimaryColor.primary_01.withOpacity(0.5);
+      isHeadFrontSelected = !isHeadFrontSelected;
+    });
+  }
+  void toggleNeckFrontColor() {
+    setState(() {
+      isNeckFrontSelected = !isNeckFrontSelected;
+    });
+  }
+  void toggleChestFrontColor() {
+    setState(() {
+      isChestFrontSelected = !isChestFrontSelected;
+    });
+  }
+  void toggleAbdomenFrontColor() {
+    setState(() {
+      isAbdomenFrontSelected = !isAbdomenFrontSelected;
+    });
+  }
+  void toggleLeftHandFrontColor() {
+    setState(() {
+      isLeftHandFrontSelected = !isLeftHandFrontSelected;
+    });
+  }
+  void toggleRightHandFrontColor() {
+    setState(() {
+      isRightHandFrontSelected = !isRightHandFrontSelected;
+    });
+  }
+  void toggleMaleGenitaliaFrontColor() {
+    setState(() {
+      isMaleGenitaliaFrontSelected = !isMaleGenitaliaFrontSelected;
+    });
+  }
+  void toggleLeftFootFrontColor() {
+    setState(() {
+      isLeftFootFrontSelected = !isLeftFootFrontSelected;
+    });
+  }
+  void toggleRightFootFrontColor() {
+    setState(() {
+      isRightFootFrontSelected = !isRightFootFrontSelected;
     });
   }
 
@@ -113,34 +163,149 @@ class _HumanBodyState extends State<HumanBody> {
             SizedBox(height: screenHeight * 0.03),
             Text(
               'Bạn đang gặp phải vấn đề gì vậy?',
-              style: TextStyleCustom.heading_2a
+              style: TextStyleCustom.heading_3a
                   .copyWith(color: PrimaryColor.primary_10),
             ),
-            SizedBox(height: screenHeight * 0.03),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return Stack(
+            // SizedBox(height: screenHeight * 0.01),
+            LayoutBuilder(builder: (context, constraints) {
+              return Center(
+                child: Stack(
                   children: [
                     Image.asset(
                       "assets/images/setExaminationNumber/front-body-man.png",
-                      
+                      width: screenWidth * 0.77,
+                      height: screenHeight * 0.79,
                       fit: BoxFit.cover,
                     ),
-                    // Positioned(
-                    //   top: height * 0.2,
-                    //   left: width * 0.3,
-                    //   child: GestureDetector(
-                    //     onTap: () => onPartTapped(0),
-                    //     child: SvgPicture.asset(
-                    //       bodyParts[0],
-                    //       color: Colors.red,
-                    //     ),
-                    //   ),
-                    // ),
+                    Positioned(
+                      left: 130.49,
+                      top: 24.47,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleHeadFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[0],
+                          color: isHeadFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 134.83,
+                      top: 96.43,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleNeckFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[1],
+                          color: isNeckFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
+                    Positioned(
+                      left: 102.66,
+                      top: 121.72,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleChestFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[2],
+                          color: isChestFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
+                    Positioned(
+                      left: 109.88,
+                      top: 192.39,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleAbdomenFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[3],
+                          color: isAbdomenFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
+                    Positioned(
+                      left: 27.61,
+                      top: 132.04,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleLeftHandFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[4],
+                          color: isLeftHandFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
+                    Positioned(
+                      left: 215.18,
+                      top: 134.97,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleRightHandFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[5],
+                          color: isRightHandFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
+                    Positioned(
+                      left: 107.8,
+                      top: 299.53,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleMaleGenitaliaFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[6],
+                          color: isMaleGenitaliaFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
+                    Positioned(
+                      left: 104.17,
+                      top: 327,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleLeftFootFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[7],
+                          color: isLeftFootFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
+                    Positioned(
+                      left: 167.05,
+                      top: 319.83,
+                      child: GestureDetector(
+                        onTap: () {
+                          toggleRightFootFrontColor();
+                        },
+                        child: SvgPicture.asset(
+                          bodyParts[8],
+                          color: isRightFootFrontSelected ? PrimaryColor.primary_02.withOpacity(0.5) : Colors.transparent,
+                        ),
+                      ),
+
+                    ),
                   ],
-                );
-              }
-            )
+                ),
+              );
+            })
           ],
         ),
       ),

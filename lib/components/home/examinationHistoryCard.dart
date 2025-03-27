@@ -48,7 +48,7 @@ class ExaminationHistoryCard extends StatelessWidget{
                       constraints: BoxConstraints(maxWidth: screenWidth * 0.5),
                       child: Text(
                         diseaseConclusion,
-                        style: TextStyleCustom.heading_2b.copyWith(color: PrimaryColor.primary_10),
+                        style: TextStyleCustom.heading_3a.copyWith(color: PrimaryColor.primary_10),
                         overflow: TextOverflow.clip,
                         softWrap: true,
                       ),

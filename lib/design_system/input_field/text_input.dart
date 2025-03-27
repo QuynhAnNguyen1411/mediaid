@@ -62,8 +62,9 @@ class CustomTextInput extends StatelessWidget {
       children: [
         if (label != null) _buildLabel(context),
         SizedBox(height: screenHeight * 0.01),
+
         TextField(
-          key: textFieldKey,  // Gán key cho TextField
+          // key: textFieldKey,  // Gán key cho TextField
           controller: controller,
           obscureText: obscureText,
           enabled: !isDisabled,
@@ -90,7 +91,7 @@ class CustomTextInput extends StatelessWidget {
             errorText: state == TextFieldState.error ? errorMessage : null,
             filled: true,
             fillColor:
-                isDisabled ? NeutralColor.neutral_01 : Colors.transparent,
+                isDisabled ? NeutralColor.neutral_01 : PrimaryColor.primary_00,
           ),
           style: TextStyleCustom.bodySmall.copyWith(color: textColor),
         ),
@@ -114,17 +115,30 @@ class CustomTextInput extends StatelessWidget {
       builder: (context, constraints){
         // Lấy chiều rộng của TextField từ LayoutBuilder constraints
         double labelWidth = constraints.maxWidth;
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Wrap(
+          alignment: WrapAlignment.start,
           children: [
             Container(
               constraints: BoxConstraints(maxWidth: labelWidth),
-              child: Text(
-                label ?? '',
-                style: TextStyleCustom.heading_3b
-                    .copyWith(color: PrimaryColor.primary_10),
-                overflow: TextOverflow.clip,
-                softWrap: true,
+              child: Row(
+                children: [
+                  Flexible(child: Text(
+                    label ?? '',
+                    style: TextStyleCustom.heading_3b
+                        .copyWith(color: PrimaryColor.primary_10),
+                    overflow: TextOverflow.clip,
+                    softWrap: true,
+                  ),
+                  ),
+                  if (isRequired)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8), // Cách 8px
+                      child: Text(
+                        ' *',
+                        style: TextStyle(color: StatusColor.errorFull),
+                      ),
+                    ),
+                ],
               ),
             ),
             if (iconLabel != null)
@@ -135,11 +149,6 @@ class CustomTextInput extends StatelessWidget {
                   height: screenHeight * 0.03,
                   child: iconLabel,
                 ),
-              ),
-            if (isRequired)
-              Text(
-                ' *',
-                style: TextStyle(color: StatusColor.errorFull),
               ),
           ],
         );

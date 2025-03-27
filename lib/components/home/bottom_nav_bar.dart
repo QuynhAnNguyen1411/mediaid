@@ -1,70 +1,74 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:mediaid/design_system/color/neutral_color.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 
-class BottomNavBar extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onTap;
+import '../../screens/electronicHealthRecord/electronicHealthRecord.dart';
+import '../../screens/home/home.dart';
+import '../../screens/setExaminationNumber/humanBody.dart';
 
-  const BottomNavBar(
-      {super.key, required this.currentIndex, required this.onTap});
-
-
-  Widget buildSvgIcon(String assetName, bool isSelected) {
-    return
-      SvgPicture.asset(
-      assetName,
-      height: 24,
-      width: 24,
-      colorFilter: ColorFilter.mode(
-        isSelected ? PrimaryColor.primary_05 : NeutralColor.neutral_04,
-        BlendMode.srcIn,
-      ),
-    );
+class BottomNavBar extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _BottomNavBarState();
   }
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+  int currentIndexTab = 0;
+
+  List<Widget> pages = [
+    Home(),
+    ElectronicHealthRecord(),
+    FrontManBody(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: PrimaryColor.primary_00,
-      padding: EdgeInsets.all(8),
-      child: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: onTap,
-        selectedItemColor: PrimaryColor.primary_05,
-        unselectedItemColor: NeutralColor.neutral_06,
-        selectedLabelStyle: TextStyleCustom.bodySmall.copyWith(
-            color: PrimaryColor.primary_05),
-        unselectedLabelStyle: TextStyleCustom.bodySmall.copyWith(
-            color: NeutralColor.neutral_06),
-        elevation: 0,
-        backgroundColor: PrimaryColor.primary_00,
-        items: [
-          BottomNavigationBarItem(
-            icon: buildSvgIcon('assets/icons/bottom_nav_bar/home.svg', currentIndex == 0),
-            label: 'Trang chủ',
-          ),
-          BottomNavigationBarItem(
-            icon: buildSvgIcon('assets/icons/bottom_nav_bar/medical-records.svg', currentIndex == 1),
-            label: 'Sổ khám',
-          ),
-          BottomNavigationBarItem(
-            icon: buildSvgIcon('assets/icons/bottom_nav_bar/archive.svg', currentIndex == 2),
-            label: 'Đặt số',
-          ),
-          BottomNavigationBarItem(
-            icon: buildSvgIcon('assets/icons/bottom_nav_bar/chat.svg', currentIndex == 3),
-            label: 'Liên hệ BS',
-          ),
-          BottomNavigationBarItem(
-            icon: buildSvgIcon('assets/icons/bottom_nav_bar/user.svg', currentIndex == 4),
-            label: 'Tài khoản',
-          ),
-        ],
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: PrimaryColor.primary_00,
+      body: pages[currentIndexTab],
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
+        child: GNav(
+          gap: screenWidth * 0.03,
+          activeColor: PrimaryColor.primary_05,
+          iconSize: 24,
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          tabBackgroundColor: PrimaryColor.primary_01.withOpacity(0.5),
+          backgroundColor: PrimaryColor.primary_00,
+          color: NeutralColor.neutral_04,
+          textStyle: TextStyleCustom.bodyLarge.copyWith(color: PrimaryColor.primary_05),
+          tabs: [
+            GButton(
+              icon: Icons.home,
+              text: 'Trang chủ',
+            ),
+            GButton(
+              icon: Icons.assignment_ind_outlined,
+              text: 'Sổ khám',
+            ),
+            GButton(
+              icon: Icons.archive_outlined,
+              text: 'Đặt số',
+            ),
+            GButton(
+              icon: Icons.account_circle,
+              text: 'Tài khoản',
+            ),
+          ],
+          selectedIndex: currentIndexTab,
+          onTabChange: (index) {
+            setState((){
+              currentIndexTab = index;
+            });
+          },  // Gọi hàm thay đổi tab khi nhấn
+        ),
       ),
     );
   }
-
 }

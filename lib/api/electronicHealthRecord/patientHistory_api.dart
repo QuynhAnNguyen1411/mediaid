@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:mediaid/models/electronicHealthRecord/personalInformation/allergyHistory.dart';
+import 'package:mediaid/models/electronicHealthRecord/personalInformation/geneticDiseaseHistory.dart';
 import 'package:mediaid/models/electronicHealthRecord/personalInformation/level.dart';
+import 'package:mediaid/models/electronicHealthRecord/personalInformation/medicalHistory.dart';
+import 'package:mediaid/models/electronicHealthRecord/personalInformation/surgeryHistory.dart';
 
 import '../../models/electronicHealthRecord/personalInformation/electronicHealthRecord.dart';
 import '../../models/electronicHealthRecord/personalInformation/reasonSurgery.dart';
@@ -12,8 +16,7 @@ class PatientHistoryApi {
   // Phương pháp điều trị - Tiểu sử bệnh tật
   // Mức độ - Tiền sử bệnh tật, dị ứng và phẫu thuật
   // Lý do phẫu thuật - Tiền sử phẫu thuật
-  static Future<Map<String, List<Object>>?>
-      getStaticDataForPatientHistory() async {
+  static Future<Map<String, List<Object>>?> getStaticDataForPatientHistory() async {
     final response = await http.get(
         Uri.parse('http://10.0.2.2:8080/api/static/staticDataForTieuSuYTe'));
 
@@ -66,6 +69,7 @@ class PatientHistoryApi {
     } else {
       print('❌ API thất bại, mã lỗi: ${response.statusCode}');
     }
+    return null;
   }
 
   // Môi trường làm việc - Khảo sát lối sống
@@ -98,11 +102,70 @@ class PatientHistoryApi {
     return null;
   }
 
-  // Gửi cả form Tiểu sử y tế
-  static Future<void> submitFormHealthRecord(
-      ElectronicHealthRecordForm form) async {
+  // Gửi cả form Tiểu sử bệnh tật đang mắc phải
+  static Future<void> submitFormMedicalHistory(
+      MedicalHistoryForm form) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/api/authentication/registry'),
+      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(form.toJson()), // Chuyển model thành JSON
+    );
+
+    if (response.statusCode == 200) {
+      // Xử lý khi gửi thành công
+      print('Dữ liệu đã được gửi thành công!');
+    } else {
+      // Xử lý khi có lỗi
+      print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
+    }
+  }
+
+  // Gửi cả form Tiểu sử bệnh di truyền đang mắc phải
+  static Future<void> submitFormGeneticDiseaseHistory(
+      GeneticDiseaseHistoryForm form) async {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(form.toJson()), // Chuyển model thành JSON
+    );
+
+    if (response.statusCode == 200) {
+      // Xử lý khi gửi thành công
+      print('Dữ liệu đã được gửi thành công!');
+    } else {
+      // Xử lý khi có lỗi
+      print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
+    }
+  }
+
+  // Gửi cả form Tiểu sử dị ứng
+  static Future<void> submitFormAllergyHistory(
+      AllergyHistoryForm form) async {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(form.toJson()), // Chuyển model thành JSON
+    );
+
+    if (response.statusCode == 200) {
+      // Xử lý khi gửi thành công
+      print('Dữ liệu đã được gửi thành công!');
+    } else {
+      // Xử lý khi có lỗi
+      print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
+    }
+  }
+  // Gửi cả form Tiểu sử phẫu thuật
+  static Future<void> submitFormSurgeryHistory(
+      SurgeryHistoryForm form) async {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },

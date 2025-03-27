@@ -1,18 +1,58 @@
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:mediaid/design_system/button/button.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/patientHistory_Common.dart';
-import 'package:mediaid/screens/registration/registration.dart';
 
+import '../../../api/electronicHealthRecord/personalInformation_api.dart';
 import '../../../components/electronicHealthRecord/medicalInformationCard.dart';
+import '../../../models/electronicHealthRecord/personalInformation/personalInformation.dart';
 import '../../../routes.dart';
 
-class PersonalInformation extends StatelessWidget {
+class PersonalInformation extends StatefulWidget {
   const PersonalInformation({super.key});
+  @override
+  State<StatefulWidget> createState() {
+    return PersonalInformationState();
+  }
+}
 
+class PersonalInformationState extends State<PersonalInformation> {
+  PersonalInformationModel? patientData;
+// Load thông tin bệnh nhân
+  void _loadPatientData() async {
+    try {
+      var box = await Hive.openBox('loginBox');
+      var accountID = await box.get('accountID');
+      var patient = await PersonalInformationApi.getPatientData(accountID);
+
+      if (patient == null) {
+        // Nếu không có dữ liệu bệnh nhân, chuyển đến trang đăng ký
+        Navigator.pushNamed(context, MediaidRoutes.registration);
+        return;
+      } else{
+        setState(() {
+          patientData = patient;
+        });
+      }
+
+      // Nếu có dữ liệu bệnh nhân
+      print(patientData);
+    } catch (e) {
+      print("Error loading patient data: $e");
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    _loadPatientData();
+
+  }
   @override
   Widget build(BuildContext context) {
+
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -38,7 +78,6 @@ class PersonalInformation extends StatelessWidget {
                       width: screenWidth * 0.08,
                       height: screenHeight * 0.04,
                       onPressed: () {
-                        Registration();
                       },
                     ),
                   ],
@@ -64,8 +103,8 @@ class PersonalInformation extends StatelessWidget {
                             Text('Họ và tên',
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
-                            Text('Nguyễn Phương Trang',
-                                style: TextStyleCustom.bodyLarge
+                            Text(patientData!.patientName,
+                                style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -76,8 +115,8 @@ class PersonalInformation extends StatelessWidget {
                             Text('CMND/CMT',
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
-                            Text('036303001737',
-                                style: TextStyleCustom.bodyLarge
+                            Text(patientData!.personalIdentifier,
+                                style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -88,8 +127,8 @@ class PersonalInformation extends StatelessWidget {
                             Text('Số thẻ BHYT',
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
-                            Text('1234567890',
-                                style: TextStyleCustom.bodyLarge
+                            Text(patientData!.healthInsurance,
+                                style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -100,8 +139,8 @@ class PersonalInformation extends StatelessWidget {
                             Text('Số điện thoại',
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
-                            Text('0867007653',
-                                style: TextStyleCustom.bodyLarge
+                            Text(patientData!.phoneNumber,
+                                style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -131,7 +170,10 @@ class PersonalInformation extends StatelessWidget {
                             'assets/icons/electronicHealthRecord/medical_history.svg',
                         label: 'Tiểu sử y tế',
                         onTap: () {
-                          Navigator.pushNamed(context, MediaidRoutes.patientHistory);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PatientHistory()),
+                          );
                         },
                       ),
                     ),

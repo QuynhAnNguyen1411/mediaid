@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediaid/models/registration/gender.dart';
 import 'package:mediaid/models/registration/nation.dart';
@@ -62,4 +63,50 @@ class RegistrationApi {
       print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
     }
   }
+
+  // Lưu token vào Hive sau khi đăng nhập thành công
+  Future<void> login(String personalIdentifierLogIn, String patientPasswordLogIn) async {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/api/authentication/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'personalIdentifier': personalIdentifierLogIn, 'password': patientPasswordLogIn}),
+    );
+
+    if (response.statusCode == 200) {
+      // Backend trả về token (ví dụ: JWT)
+      final data = json.decode(response.body);
+      String token = data['token'];
+
+      // Lưu token vào Hive
+      var box = await Hive.openBox('loginBox');
+      await box.put('auth_token', token);
+    } else {
+      // Xử lý lỗi nếu đăng nhập không thành công
+      print('Login failed');
+    }
+  }
+
+  // Lấy token từ Hive và sử dụng trong các yêu cầu tiếp theo
+  Future<void> getProfile() async {
+    var box = await Hive.openBox('loginBox');
+    String? token = box.get('auth_token');
+
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8080/api/authentication/login'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Xử lý dữ liệu người dùng
+        print('Profile: ${response.body}');
+      } else {
+        // Xử lý lỗi nếu yêu cầu thất bại
+        print('Failed to fetch profile');
+      }
+    } else {
+      print('No token found, please login first');
+    }
+  }
+
 }

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:mediaid/components/home/bottom_nav_bar.dart';
 import 'package:mediaid/routes.dart';
 import '../../design_system/button/button.dart';
 import '../../design_system/color/primary_color.dart';
@@ -7,7 +11,7 @@ import '../../design_system/color/status_color.dart';
 import '../../design_system/input_field/text_input.dart';
 import '../../design_system/textstyle/textstyle.dart';
 import '../home/home.dart';
-import 'package:mediaid/screens/registration/registration.dart';
+import 'package:http/http.dart' as http;
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -39,6 +43,46 @@ class _LogInState extends State<LogIn> {
   final TextEditingController patientPasswordLogInController =
       TextEditingController();
 
+  // Hàm gửi yêu cầu đăng nhập
+  Future<void> login(String personalIdentifier, String password) async {
+    String body = json.encode({'personalIdentifier': personalIdentifier, 'password': password});
+    print(body);
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/api/authentication/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: body
+    );
+
+    // LogInForm form = LogInForm(
+    //     personalIdentifier: personalIdentifier,
+    //     password: password.
+    // );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      String token = data['token'];
+
+      // Lưu token vào Hive
+      var box = await Hive.openBox('loginBox');
+      await box.put('auth_token', token);
+      String accountID = data['accountID'];
+
+      // Lưu token vào Hive
+      await box.put('accountID', accountID);
+
+      // Thực hiện điều hướng sau khi đăng nhập thành công (Ví dụ: chuyển sang màn hình chính)
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BottomNavBar()),
+      );
+    } else {
+      // Hiển thị thông báo lỗi nếu đăng nhập thất bại
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đăng nhập không thành công')),
+      );
+    }
+  }
+
   void _showSuccessDialog(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
@@ -49,8 +93,10 @@ class _LogInState extends State<LogIn> {
         // Tự động đóng popup sau 2 giây và chuyển trang
         Future.delayed(Duration(seconds: 2), () {
           if (context.mounted) {
-            Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BottomNavBar()),
+            );
           }
         });
         return Dialog(
@@ -91,7 +137,6 @@ class _LogInState extends State<LogIn> {
     super.initState();
     personalIDLogInFocusNode = FocusNode();
     passwordLogInFocusNode = FocusNode();
-
     personalIdentifierLogInController.addListener(_validateForm);
     patientPasswordLogInController.addListener(_validateForm);
 
@@ -276,6 +321,17 @@ class _LogInState extends State<LogIn> {
               height: screenHeight * 0.06,
               onPressed: isButtonActive
                   ? () {
+                      String personalIdentifier =
+                          personalIdentifierLogInController.text;
+                      String password = patientPasswordLogInController.text;
+                      if (personalIdentifier.isNotEmpty &&
+                          password.isNotEmpty) {
+                        login(personalIdentifier, password); // Gọi hàm đăng nhập
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Vui lòng nhập đủ thông tin')),
+                        );
+                      }
                       _showSuccessDialog;
                     }
                   : null,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mediaid/components/home/bottom_nav_bar.dart';
 import 'package:mediaid/screens/electronicHealthRecord/electronicHealthRecord.dart';
 import 'package:mediaid/screens/electronicHealthRecord/medicalRecord/medicalRecord.dart';
 import 'package:mediaid/screens/electronicHealthRecord/medicalRecord/medicalRecordList.dart';
@@ -7,7 +8,6 @@ import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patie
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/medicalHistory.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/patientHistory_Common.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/patientHistory/surgeryHistory.dart';
-import 'package:mediaid/screens/electronicHealthRecord/personalInformation/personalInformation.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/recentDrugUseHistory.dart';
 import 'package:mediaid/screens/home/home.dart';
 import 'package:mediaid/screens/login/login.dart';
@@ -35,7 +35,8 @@ class MediaidRoutes {
   static const String lifestyleSurvey = '/lifestyleSurvey';
   static const String medicalRecord = '/medicalRecord';
   static const String medicalRecordList = '/medicalRecordList';
-  static const String humanBody = '/humanBody';
+  static const String frontManBody = '/frontManBody';
+  static const String bottomNavBar = '/bottomNavBar';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -71,8 +72,10 @@ class MediaidRoutes {
         return MaterialPageRoute(builder: (_) => MedicalRecord());
       case medicalRecordList:
         return MaterialPageRoute(builder: (_) => MedicalRecordList());
-      case humanBody:
-        return MaterialPageRoute(builder: (_) => HumanBody());
+      case frontManBody:
+        return MaterialPageRoute(builder: (_) => FrontManBody());
+      case bottomNavBar:
+        return MaterialPageRoute(builder: (_) => BottomNavBar());
       default:
         return MaterialPageRoute(builder: (_) => Splash());
     }

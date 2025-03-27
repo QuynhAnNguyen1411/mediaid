@@ -39,6 +39,13 @@ dependencies:
   intl: ^0.20.2
   http: ^1.3.0
   flutter_svg: ^2.0.17
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
+  google_nav_bar: ^5.0.7
+  get: ^4.7.2
+
+
+
 
 
 dev_dependencies:
@@ -91,16 +98,17 @@ flutter:
     - assets/icons/electronicHealthRecord/notes.svg
     - assets/images/registration/success_dialog.jpg
     - assets/icons/electronicHealthRecord/info.svg
-    - assets/icons/setExaminationNumber/abdomen-front-man.svg
-    - assets/icons/setExaminationNumber/chest-front-man.svg
-    - assets/icons/setExaminationNumber/head-front-man.svg
-    - assets/icons/setExaminationNumber/left-foot-front-man.svg
-    - assets/icons/setExaminationNumber/left-hand-front-man.svg
-    - assets/icons/setExaminationNumber/male-genitalia-front-man.svg
-    - assets/icons/setExaminationNumber/neck-front-man.svg
-    - assets/icons/setExaminationNumber/right-foot-front-man.svg
-    - assets/icons/setExaminationNumber/right-hand-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/abdomen-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/chest-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/head-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/left-foot-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/left-hand-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/male-genitalia-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/neck-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/right-foot-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/right-hand-front-man.svg
     - assets/images/setExaminationNumber/front-body-man.png
+    - assets/icons/electronicHealthRecord/dots.svg
 
 
   fonts:
