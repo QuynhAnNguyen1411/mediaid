@@ -1,4 +1,5 @@
 class MedicalHistoryForm{
+  String accountID;
   String typeOfDisease;
   String yearOfDiagnosis;
   int medicalLevel;
@@ -8,6 +9,7 @@ class MedicalHistoryForm{
   String noteDisease;
 
   MedicalHistoryForm({
+    required this.accountID,
     required this.typeOfDisease,
     required this.yearOfDiagnosis,
     required this.medicalLevel,
@@ -21,6 +23,7 @@ class MedicalHistoryForm{
   // Phương thức chuyển Object -> JSON
   Map<String, dynamic> toJson() {
     return {
+      'accountID': accountID,
       'typeOfDisease': typeOfDisease,
       'yearOfDiagnosis': yearOfDiagnosis,
       'medicalLevel': medicalLevel,

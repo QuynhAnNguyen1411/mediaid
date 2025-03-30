@@ -10,7 +10,6 @@ import '../../design_system/color/primary_color.dart';
 import '../../design_system/color/status_color.dart';
 import '../../design_system/input_field/text_input.dart';
 import '../../design_system/textstyle/textstyle.dart';
-import '../home/home.dart';
 import 'package:http/http.dart' as http;
 
 class LogIn extends StatefulWidget {

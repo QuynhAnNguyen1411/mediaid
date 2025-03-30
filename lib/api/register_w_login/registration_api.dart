@@ -43,6 +43,7 @@ class RegistrationApi {
     } else {
       print('❌ API thất bại, mã lỗi: ${response.statusCode}');
     }
+    return null;
   }
 
   // Gửi cả form đăng ký
@@ -106,6 +107,44 @@ class RegistrationApi {
       }
     } else {
       print('No token found, please login first');
+    }
+  }
+
+  // Lấy giới tính đã đăng ký để hiển thị body + Data hiển thị chỉnh sửa
+  static Future<RegistrationForm?> getRegistrationData(String id) async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:8080/'));
+
+    if (response.statusCode == 200) {
+      try {
+        String responseBody = utf8.decode(response.bodyBytes);
+        Map<String, dynamic> data = jsonDecode(responseBody);
+        print(data);
+
+        // Cập nhật các khóa phù hợp với dữ liệu bạn muốn truy xuất từ response
+        RegistrationForm registrationForm = RegistrationForm(
+            personalIdentifier: data['accountID'],
+            healthInsurance: data['accountID'],
+            patientName: data['accountID'],
+            addressPatient: data['accountID'],
+            phoneNumber: data['accountID'],
+            emailPatient: data['accountID'],
+            dob: data['accountID'],
+            sexPatient: data['accountID'],
+            nationPatient: data['accountID'],
+            patientPassword: data['accountID'],
+            patientFamilyName: data['accountID'],
+            patientRelationship: data['accountID'],
+            patientFamilyIdentifier: data['accountID'],
+            patientFamilyPhoneNumber: data['accountID'],
+        );
+
+        return registrationForm;
+      } catch (e) {
+        throw Exception('❌ Lỗi xử lý JSON: $e');
+      }
+    } else {
+      print('❌ API thất bại, mã lỗi: ${response.statusCode}');
+      return null; // Nếu API không thành công, trả về null
     }
   }
 

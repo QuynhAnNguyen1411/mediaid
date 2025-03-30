@@ -107,8 +107,41 @@ flutter:
     - assets/icons/setExaminationNumber/front-man/neck-front-man.svg
     - assets/icons/setExaminationNumber/front-man/right-foot-front-man.svg
     - assets/icons/setExaminationNumber/front-man/right-hand-front-man.svg
-    - assets/images/setExaminationNumber/front-body-man.png
+    - assets/images/setExaminationNumber/front-male-body.png
     - assets/icons/electronicHealthRecord/dots.svg
+    - assets/icons/setExaminationNumber/list.svg
+    - assets/icons/setExaminationNumber/rotate.svg
+    - assets/images/setExaminationNumber/front-male-body.png
+    - assets/images/setExaminationNumber/back-male-body.png
+    - assets/icons/setExaminationNumber/back-man/head-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/neck-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/back-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/left-hand-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/right-hand-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/male-butt-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/left-foot-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/right-foot-back-man.svg
+    - assets/icons/home/notification.svg
+    - assets/images/setExaminationNumber/front-female-body.png
+    - assets/images/setExaminationNumber/back-female-body.png
+    - assets/icons/setExaminationNumber/front-woman/head-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/neck-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/chest-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/abdomen-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/left-hand-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/right-hand-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/female-genitalia-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/left-foot-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/right-foot-front-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/back-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/female-butt-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/head-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/left-foot-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/left-hand-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/neck-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/right-foot-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/right-hand-back-woman.svg
+
 
 
   fonts:

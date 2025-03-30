@@ -12,7 +12,7 @@ import 'package:mediaid/screens/electronicHealthRecord/personalInformation/recen
 import 'package:mediaid/screens/home/home.dart';
 import 'package:mediaid/screens/login/login.dart';
 import 'package:mediaid/screens/registration/registration.dart';
-import 'package:mediaid/screens/setExaminationNumber/humanBody.dart';
+import 'package:mediaid/screens/setExaminationNumber/maleBody.dart';
 import 'package:mediaid/screens/splash/medicalFacility.dart';
 import 'package:mediaid/screens/splash/navigationSurvey.dart';
 import 'package:mediaid/screens/splash/patientGroup.dart';
@@ -35,7 +35,7 @@ class MediaidRoutes {
   static const String lifestyleSurvey = '/lifestyleSurvey';
   static const String medicalRecord = '/medicalRecord';
   static const String medicalRecordList = '/medicalRecordList';
-  static const String frontManBody = '/frontManBody';
+  static const String maleBody = '/maleBody';
   static const String bottomNavBar = '/bottomNavBar';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -72,8 +72,8 @@ class MediaidRoutes {
         return MaterialPageRoute(builder: (_) => MedicalRecord());
       case medicalRecordList:
         return MaterialPageRoute(builder: (_) => MedicalRecordList());
-      case frontManBody:
-        return MaterialPageRoute(builder: (_) => FrontManBody());
+      case maleBody:
+        return MaterialPageRoute(builder: (_) => MaleBody());
       case bottomNavBar:
         return MaterialPageRoute(builder: (_) => BottomNavBar());
       default:

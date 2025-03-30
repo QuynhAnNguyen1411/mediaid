@@ -8,7 +8,6 @@ import 'package:mediaid/design_system/color/status_color.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/routes.dart';
 import 'package:mediaid/screens/electronicHealthRecord/electronicHealthRecord.dart';
-import 'package:mediaid/screens/setExaminationNumber/humanBody.dart';
 import '../../components/home/examinationHistoryCard.dart';
 import '../../design_system/color/primary_color.dart';
 
@@ -44,43 +43,11 @@ class _HomeState extends State<Home> {
                     height: screenHeight * 0.07,
                     width: screenWidth * 0.2,
                   ),
-
-                  // Button display language
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.03,
-                        vertical: screenHeight * 0.005),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFCCDEE7),
-                          Color(0xFFCCDEE7),
-                          Color(0xFF015C89),
-                        ],
-                        stops: [0.0, 0.12, 0.88],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        // VN flag
-                        Image.asset(
-                          'assets/images/registration/vietnam_flag.jpg',
-                          width: screenWidth * 0.08,
-                          height: screenHeight * 0.04,
-                        ),
-                        SizedBox(width: screenWidth * 0.03),
-                        // Text Vietnam
-                        Text(
-                          'Vietnam',
-                          style: TextStyleCustom.heading_3b
-                              .copyWith(color: PrimaryColor.primary_00),
-                        )
-                      ],
-                    ),
-                  )
+                  SvgPicture.asset(
+                    'assets/icons/home/notification.svg',
+                    width: screenWidth * 0.06,
+                    height: screenHeight * 0.04,
+                  ),
                 ],
               ),
             ),

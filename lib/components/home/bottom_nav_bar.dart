@@ -7,7 +7,8 @@ import 'package:mediaid/design_system/textstyle/textstyle.dart';
 
 import '../../screens/electronicHealthRecord/electronicHealthRecord.dart';
 import '../../screens/home/home.dart';
-import '../../screens/setExaminationNumber/humanBody.dart';
+import '../../screens/setExaminationNumber/femaleBody.dart';
+import '../../screens/setExaminationNumber/maleBody.dart';
 
 class BottomNavBar extends StatefulWidget{
   @override
@@ -22,7 +23,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   List<Widget> pages = [
     Home(),
     ElectronicHealthRecord(),
-    FrontManBody(),
+    // gender == 'nam' ? MaleBody() : FemaleBody(),
+    FemaleBody(),
   ];
 
   @override

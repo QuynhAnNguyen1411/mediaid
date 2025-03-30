@@ -104,7 +104,7 @@ class PersonalInformationState extends State<PersonalInformation> {
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
                             Text(patientData!.patientName,
-                                style: TextStyleCustom.bodySmall
+                                style: TextStyleCustom.bodyLarge
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -116,7 +116,7 @@ class PersonalInformationState extends State<PersonalInformation> {
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
                             Text(patientData!.personalIdentifier,
-                                style: TextStyleCustom.bodySmall
+                                style: TextStyleCustom.bodyLarge
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -128,7 +128,7 @@ class PersonalInformationState extends State<PersonalInformation> {
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
                             Text(patientData!.healthInsurance,
-                                style: TextStyleCustom.bodySmall
+                                style: TextStyleCustom.bodyLarge
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -140,7 +140,7 @@ class PersonalInformationState extends State<PersonalInformation> {
                                 style: TextStyleCustom.bodySmall
                                     .copyWith(color: PrimaryColor.primary_10)),
                             Text(patientData!.phoneNumber,
-                                style: TextStyleCustom.bodySmall
+                                style: TextStyleCustom.bodyLarge
                                     .copyWith(color: PrimaryColor.primary_10))
                           ],
                         ),
@@ -170,10 +170,7 @@ class PersonalInformationState extends State<PersonalInformation> {
                             'assets/icons/electronicHealthRecord/medical_history.svg',
                         label: 'Tiểu sử y tế',
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => PatientHistory()),
-                          );
+                          Navigator.pushNamed(context, MediaidRoutes.patientHistory);
                         },
                       ),
                     ),

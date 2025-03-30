@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mediaid/design_system/color/neutral_color.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/personalInformation.dart';
@@ -31,7 +32,7 @@ class _ElectronicHealthRecord extends State<ElectronicHealthRecord>
     return Scaffold(
       backgroundColor: PrimaryColor.primary_00,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.035),
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.035, vertical: screenHeight * 0.02),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,49 +40,12 @@ class _ElectronicHealthRecord extends State<ElectronicHealthRecord>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Logo Hospital K
-                  Image.asset(
-                    'assets/logo/national_cancer_hospital_logo.jpg',
-                    height: screenHeight * 0.07,
-                    width: screenWidth * 0.2,
+                  Text('Quản lý sổ khám điện tử', style: TextStyleCustom.heading_2a.copyWith(color: PrimaryColor.primary_10),),
+                  SvgPicture.asset(
+                    'assets/icons/home/notification.svg',
+                    width: screenWidth * 0.06,
+                    height: screenHeight * 0.04,
                   ),
-
-                  // Button display language
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.03,
-                        vertical: screenHeight * 0.005),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFCCDEE7),
-                          Color(0xFFCCDEE7),
-                          Color(0xFF015C89),
-                        ],
-                        stops: [0.0, 0.12, 0.88],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        // VN flag
-                        Image.asset(
-                          'assets/images/registration/vietnam_flag.jpg',
-                          width: screenWidth * 0.08,
-                          height: screenHeight * 0.04,
-                        ),
-                        SizedBox(width: screenWidth * 0.03),
-                        // Text Vietnam
-                        Text(
-                          'Vietnam',
-                          style: TextStyleCustom.heading_3b
-                              .copyWith(color: PrimaryColor.primary_00),
-                        )
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),

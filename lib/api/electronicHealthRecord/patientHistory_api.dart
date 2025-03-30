@@ -16,7 +16,8 @@ class PatientHistoryApi {
   // Phương pháp điều trị - Tiểu sử bệnh tật
   // Mức độ - Tiền sử bệnh tật, dị ứng và phẫu thuật
   // Lý do phẫu thuật - Tiền sử phẫu thuật
-  static Future<Map<String, List<Object>>?> getStaticDataForPatientHistory() async {
+  static Future<
+      Map<String, List<Object>>?> getStaticDataForPatientHistory() async {
     final response = await http.get(
         Uri.parse('http://10.0.2.2:8080/api/static/staticDataForTieuSuYTe'));
 
@@ -73,7 +74,8 @@ class PatientHistoryApi {
   }
 
   // Môi trường làm việc - Khảo sát lối sống
-  static Future<Map<String, List<Object>>?> getStaticDataForLifestyleSurvey() async {
+  static Future<
+      Map<String, List<Object>>?> getStaticDataForLifestyleSurvey() async {
     final response = await http.get(
         Uri.parse('http://10.0.2.2:8080/api/static/staticDataForTieuSuYTe'));
     if (response.statusCode == 200) {
@@ -83,9 +85,12 @@ class PatientHistoryApi {
         print(data);
 
         List<WorkingEnvironment> moiTruongLamViecList = [];
-        if (data['moiTruongLamViecDTO'] != null && data['moiTruongLamViecDTO'] is List) {
+        if (data['moiTruongLamViecDTO'] != null &&
+            data['moiTruongLamViecDTO'] is List) {
           for (var e in (data['moiTruongLamViecDTO'] as List)) {
-            WorkingEnvironment workingEnvironment = WorkingEnvironment(workingEnvironmentID: e['id'], workingEnvironmentName: e['ten']);
+            WorkingEnvironment workingEnvironment = WorkingEnvironment(
+                workingEnvironmentID: e['id'],
+                workingEnvironmentName: e['ten']);
             moiTruongLamViecList.add(workingEnvironment);
           }
         }
@@ -103,8 +108,7 @@ class PatientHistoryApi {
   }
 
   // Gửi cả form Tiểu sử bệnh tật đang mắc phải
-  static Future<void> submitFormMedicalHistory(
-      MedicalHistoryForm form) async {
+  static Future<void> submitFormMedicalHistory(MedicalHistoryForm form) async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
       headers: {
@@ -126,7 +130,7 @@ class PatientHistoryApi {
   static Future<void> submitFormGeneticDiseaseHistory(
       GeneticDiseaseHistoryForm form) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
+      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhDiTruyen'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -143,10 +147,9 @@ class PatientHistoryApi {
   }
 
   // Gửi cả form Tiểu sử dị ứng
-  static Future<void> submitFormAllergyHistory(
-      AllergyHistoryForm form) async {
+  static Future<void> submitFormAllergyHistory(AllergyHistoryForm form) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
+      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuDiUng'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -161,9 +164,9 @@ class PatientHistoryApi {
       print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
     }
   }
+
   // Gửi cả form Tiểu sử phẫu thuật
-  static Future<void> submitFormSurgeryHistory(
-      SurgeryHistoryForm form) async {
+  static Future<void> submitFormSurgeryHistory(SurgeryHistoryForm form) async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
       headers: {
@@ -180,4 +183,72 @@ class PatientHistoryApi {
       print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
     }
   }
+
+  // Lấy tiền sử bệnh tật để show form tóm tắt
+  static Future<MedicalHistoryForm?> getMedicalHistoryData(String id) async {
+    final response = await http.get(Uri.parse(
+        'http://10.0.2.2:8080/layDanhSachTieuSuPreview?accountID=' + id +
+            'type=TieuSuBenhTat'));
+
+    if (response.statusCode == 200) {
+      try {
+        String responseBody = utf8.decode(response.bodyBytes);
+        List<dynamic> data = jsonDecode(responseBody);
+        print(data);
+
+        List<MedicalHistoryForm> medicalHistoryForms = [];
+    //     data.forEach(e => (
+    //     MedicalHistoryForm medicalHistoryForm = MedicalHistoryForm(
+    //     accountID: data['accountID'],
+    //     typeOfDisease: data['loaiBenh'],
+    //     yearOfDiagnosis: data['namPhatHien'],
+    //     medicalLevel: data['mucDoID'],
+    //     treatmentMethod: data['phuongPhapDieuTriID'],
+    //     complications: data['bienChung'],
+    //     hospitalTreatment: data['benhVienDieuTri'],
+    //     noteDisease: data['ghiChu'],
+    //     );
+    // ));
+    //
+    //
+    //     return medicalHistoryForm;
+      } catch (e) {
+        throw Exception('❌ Lỗi xử lý JSON: $e');
+      }
+    } else {
+      print('❌ API thất bại, mã lỗi: ${response.statusCode}');
+      return null; // Nếu API không thành công, trả về null
+    }
+  }
+// static Future<MedicalHistoryForm?> getMedicalHistoryData(String id) async {
+//   final response = await http.get(Uri.parse('http://10.0.2.2:8080/layTieuSuBenhTat'));
+//
+//   if (response.statusCode == 200) {
+//     try {
+//       String responseBody = utf8.decode(response.bodyBytes);
+//       Map<String, dynamic> data = jsonDecode(responseBody);
+//       print(data);
+//
+//       // Cập nhật các khóa phù hợp với dữ liệu bạn muốn truy xuất từ response
+//       MedicalHistoryForm medicalHistoryForm = MedicalHistoryForm(
+//         accountID: data['accountID'],
+//         typeOfDisease: data['loaiBenh'],
+//         yearOfDiagnosis: data['namPhatHien'],
+//         medicalLevel: data['mucDoID'],
+//         treatmentMethod: data['phuongPhapDieuTriID'],
+//         complications: data['bienChung'],
+//         hospitalTreatment: data['benhVienDieuTri'],
+//         noteDisease: data['ghiChu'],
+//       );
+//
+//       return medicalHistoryForm;
+//     } catch (e) {
+//       throw Exception('❌ Lỗi xử lý JSON: $e');
+//     }
+//   } else {
+//     print('❌ API thất bại, mã lỗi: ${response.statusCode}');
+//     return null; // Nếu API không thành công, trả về null
+//   }
+// }
+
 }

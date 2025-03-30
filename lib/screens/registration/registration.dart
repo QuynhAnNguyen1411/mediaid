@@ -9,6 +9,7 @@ import 'package:mediaid/design_system/input_field/text_input.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import 'package:mediaid/design_system/selection/radio_button.dart';
 import 'package:mediaid/models/registration/registration.dart';
+import 'package:mediaid/routes.dart';
 import 'package:mediaid/screens/login/login.dart';
 import '../../api/register_w_login/registration_api.dart';
 import '../../design_system/color/neutral_color.dart';
@@ -928,10 +929,7 @@ class _RegistrationState extends State<Registration> {
                     width: screenWidth * 0.03,
                     height: screenHeight * 0.06,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LogIn()),
-                      );
+                      Navigator.pushNamed(context, MediaidRoutes.logIn);
                     },
                   )
                 ],

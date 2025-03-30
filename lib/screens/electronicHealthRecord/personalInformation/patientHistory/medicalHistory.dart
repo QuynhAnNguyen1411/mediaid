@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:mediaid/api/electronicHealthRecord/patientHistory_api.dart';
 import 'package:mediaid/design_system/color/neutral_color.dart';
 import 'package:mediaid/design_system/color/status_color.dart';
@@ -102,7 +103,10 @@ class _MedicalHistoryState extends State<MedicalHistory> {
         .of(context)
         .size
         .height;
+    var box = await Hive.openBox('loginBox');
+    String accountID = await box.get('accountID');
     MedicalHistoryForm form = MedicalHistoryForm(
+      accountID: accountID,
       typeOfDisease: typeOfDiseaseController.text,
       yearOfDiagnosis: yearOfDiagnosisController.text,
       medicalLevel: _selectedMucdoId ?? 1,
@@ -120,6 +124,7 @@ class _MedicalHistoryState extends State<MedicalHistory> {
     } catch (e) {
       print('Có lỗi xảy ra khi gửi form: $e');
     }
+    Navigator.pop(context);
   }
 
   // Hàm gửi dữ liệu form khi nhấn nút "Lưu thông tin" - Tiểu sử bệnh di truyền
@@ -163,11 +168,38 @@ class _MedicalHistoryState extends State<MedicalHistory> {
       _selectedMucdoId = null;
     });
   }
+  bool _isMedicalHistoryDataSent = false;
+  MedicalHistoryForm? medicalHistoryData;
+  void _loadMedicalHistoryData() async {
+    print("avmef");
+    try {
+      var box = await Hive.openBox('loginBox');
+      String accountID = await box.get('accountID');
+      var medicalHistory = await PatientHistoryApi.getMedicalHistoryData(accountID);
+      print(medicalHistory);
+      if (medicalHistory == null) {
+        setState(() {
+          _isMedicalHistoryDataSent = false;
+          medicalHistoryData = null;
+        });
+      } else {
+        setState(() {
+          _isMedicalHistoryDataSent = true;
+          medicalHistoryData = medicalHistory;
+        });
+      }
+      print("Is Medical History Data Sent: $_isMedicalHistoryDataSent");
+    } catch (error) {
+      print("Error loading medical history data: $error");
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
     _fetchDropdownDataMedicalHistory();
+    _loadMedicalHistoryData();
   }
 
   @override
@@ -199,39 +231,38 @@ class _MedicalHistoryState extends State<MedicalHistory> {
             ),
           ),
           SizedBox(height: screenHeight * 0.02),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(
-          //       horizontal: screenWidth * 0.04,
-          //       vertical: screenHeight * 0.02
-          //   ),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             children: [
-          //               Text(_typeOfDisease),
-          //               SizedBox(width: screenWidth * 0.02),
-          //               Text('-'),
-          //               SizedBox(width: screenWidth * 0.02),
-          //               Text(_yearOfDiagnosis),
-          //             ],
-          //           ),
-          //           SizedBox(height: screenHeight * 0.01),
-          //           Text(_treatmentMethod),
-          //         ],
-          //       ),
-          //       SvgPicture.asset(
-          //         "assets/icons/electronicHealthRecord/dots.svg",
-          //         width: screenWidth * 0.06,
-          //         height: screenHeight * 0.02,
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // SizedBox(height: screenHeight * 0.03),
+          _isMedicalHistoryDataSent ? Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04,
+                vertical: screenHeight * 0.02
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(medicalHistoryData!.typeOfDisease),
+                        SizedBox(width: screenWidth * 0.02),
+                        Text('-'),
+                        SizedBox(width: screenWidth * 0.02),
+                        Text(medicalHistoryData!.yearOfDiagnosis),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    Text(medicalHistoryData!.treatmentMethod as String),
+                  ],
+                ),
+                SvgPicture.asset(
+                  "assets/icons/electronicHealthRecord/dots.svg",
+                  width: screenWidth * 0.06,
+                  height: screenHeight * 0.02,
+                ),
+              ],
+            ),
+          ) : Text (" "),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text('Bệnh di truyền', style: TextStyleCustom.heading_3a),
