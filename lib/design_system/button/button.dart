@@ -9,7 +9,7 @@ enum ButtonState { fill1, fill2, outline, text, disabled }
 
 class CustomButton extends StatelessWidget {
    final String? text;
-   final IconData? icon;
+   final dynamic? icon;
    final ButtonType type;
    final ButtonState state;
    final VoidCallback? onPressed;
@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
       if (state == ButtonState.disabled || onPressed == null) {
         return NeutralColor.neutral_06;
       }
-      
+
       switch (state) {
         case ButtonState.fill1:
           return PrimaryColor.primary_00;
@@ -40,7 +40,7 @@ class CustomButton extends StatelessWidget {
     Widget buttonChild = _buildButtonChild(textColor);
 
     if (isDisabled) {
-      return _buildDisabledButton(_buildButtonChild(NeutralColor.neutral_06));  // Create new button child with correct color
+      return _buildDisabledButton(_buildButtonChild(NeutralColor.neutral_06));
     }
 
     switch (state) {
@@ -67,6 +67,7 @@ class CustomButton extends StatelessWidget {
       child: child,
     );
   }
+
   Widget _buildButtonChild(Color textColor) {
     switch (type) {
       case ButtonType.iconLeft:

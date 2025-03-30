@@ -35,7 +35,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
+  uuid: ^4.4.2
   intl: ^0.20.2
+  http: ^1.3.0
+  flutter_svg: ^2.0.17
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
+  google_nav_bar: ^5.0.7
+  get: ^4.7.2
+
+
+
+
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +74,75 @@ flutter:
   assets:
     - assets/logo/national_cancer_hospital_logo.jpg
     - assets/images/registration/vietnam_flag.jpg
+    - assets/images/splash/male_doctor_medical_facility.jpg
+    - assets/images/splash/female_doctor_navigation_survey.jpg
+    - assets/images/log_in/doctor_log_in.jpg
+    - assets/icons/home/cancer_screening.svg
+    - assets/icons/home/disease_conclusion.svg
+    - assets/icons/home/register_for_examination.svg
+    - assets/icons/bottom_nav_bar/archive.svg
+    - assets/icons/bottom_nav_bar/chat.svg
+    - assets/icons/bottom_nav_bar/home.svg
+    - assets/icons/bottom_nav_bar/medical-records.svg
+    - assets/icons/bottom_nav_bar/user.svg
+    - assets/icons/registration/disabled_people.svg
+    - assets/icons/registration/elderly_people.svg
+    - assets/icons/registration/people_over_14_years_old.svg
+    - assets/icons/registration/people_under_14_years_old.svg
+    - assets/icons/electronicHealthRecord/medical_history.svg
+    - assets/icons/electronicHealthRecord/drug_history.svg
+    - assets/icons/electronicHealthRecord/lifestyle.svg
+    - assets/icons/home/hospital.svg
+    - assets/icons/home/doctor.svg
+    - assets/icons/home/calendar.svg
+    - assets/icons/electronicHealthRecord/notes.svg
+    - assets/images/registration/success_dialog.jpg
+    - assets/icons/electronicHealthRecord/info.svg
+    - assets/icons/setExaminationNumber/front-man/abdomen-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/chest-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/head-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/left-foot-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/left-hand-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/male-genitalia-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/neck-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/right-foot-front-man.svg
+    - assets/icons/setExaminationNumber/front-man/right-hand-front-man.svg
+    - assets/images/setExaminationNumber/front-male-body.png
+    - assets/icons/electronicHealthRecord/dots.svg
+    - assets/icons/setExaminationNumber/list.svg
+    - assets/icons/setExaminationNumber/rotate.svg
+    - assets/images/setExaminationNumber/front-male-body.png
+    - assets/images/setExaminationNumber/back-male-body.png
+    - assets/icons/setExaminationNumber/back-man/head-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/neck-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/back-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/left-hand-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/right-hand-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/male-butt-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/left-foot-back-man.svg
+    - assets/icons/setExaminationNumber/back-man/right-foot-back-man.svg
+    - assets/icons/home/notification.svg
+    - assets/images/setExaminationNumber/front-female-body.png
+    - assets/images/setExaminationNumber/back-female-body.png
+    - assets/icons/setExaminationNumber/front-woman/head-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/neck-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/chest-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/abdomen-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/left-hand-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/right-hand-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/female-genitalia-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/left-foot-front-woman.svg
+    - assets/icons/setExaminationNumber/front-woman/right-foot-front-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/back-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/female-butt-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/head-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/left-foot-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/left-hand-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/neck-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/right-foot-back-woman.svg
+    - assets/icons/setExaminationNumber/back-woman/right-hand-back-woman.svg
+
+
 
   fonts:
     - family: Quicksand

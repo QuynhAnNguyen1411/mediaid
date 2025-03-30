@@ -4,61 +4,61 @@ import 'package:google_fonts/google_fonts.dart';
 class TextStyleCustom {
   static final TextStyle heading_1a = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: FontWeight.w700,
   );
 
   static final TextStyle heading_1b = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: FontWeight.w600,
   );
 
   static final TextStyle heading_1c = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: FontWeight.w500,
   );
 
   static final TextStyle heading_2a = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: FontWeight.w700,
   );
 
   static final TextStyle heading_2b = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: FontWeight.w600,
   );
 
   static final TextStyle heading_2c = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: FontWeight.w500,
   );
 
   static final TextStyle heading_3a = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: FontWeight.w700,
   );
 
   static final TextStyle heading_3b = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: FontWeight.w600,
   );
 
   static final TextStyle heading_3c = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: FontWeight.w500,
   );
 
   static final TextStyle bodyLarge = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: FontWeight.w600,
   );
 
@@ -70,7 +70,7 @@ class TextStyleCustom {
 
   static final TextStyle button = const TextStyle(
     fontFamily: 'Quicksand',
-    fontSize: 15.5,
+    fontSize: 18,
     fontWeight: FontWeight.w600,
   );
 
