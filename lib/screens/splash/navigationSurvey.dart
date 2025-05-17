@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mediaid/routes.dart';
-import 'package:mediaid/screens/login/login.dart';
-import 'package:mediaid/screens/registration/registration.dart';
+import 'package:mediaid/util/spacingStandards.dart';
 
 import '../../design_system/button/button.dart';
 import '../../design_system/color/primary_color.dart';
@@ -17,7 +16,9 @@ class NavigationSurvey extends StatelessWidget {
     return Scaffold(
         backgroundColor: PrimaryColor.primary_00,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(
+              horizontal: SpacingUtil.spacingWidth16(context),
+              vertical: SpacingUtil.spacingHeight24(context)),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             SafeArea(
@@ -27,15 +28,14 @@ class NavigationSurvey extends StatelessWidget {
                   // Logo Hospital K
                   Image.asset(
                     'assets/logo/national_cancer_hospital_logo.jpg',
-                    height: screenHeight * 0.07,
-                    width: screenWidth * 0.2,
+                    width: LogoSizeUtil.medium(context),
                   ),
 
                   // Button display language
                   Container(
                     padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.03,
-                        vertical: screenHeight * 0.005),
+                        horizontal: SpacingUtil.spacingWidth16(context),
+                        vertical: SpacingUtil.spacingHeight12(context)),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
@@ -54,10 +54,11 @@ class NavigationSurvey extends StatelessWidget {
                         // VN flag
                         Image.asset(
                           'assets/images/registration/vietnam_flag.jpg',
-                          width: screenWidth * 0.08,
-                          height: screenHeight * 0.04,
+                          width: SpacingUtil.spacingWidth32(context),
+                          // width: screenWidth * 0.08,
+                          // height: screenHeight * 0.04,
                         ),
-                        SizedBox(width: screenWidth * 0.03),
+                        SizedBox(width: SpacingUtil.spacingWidth12(context)),
                         // Text Vietnam
                         Text(
                           'Vietnam',
@@ -70,55 +71,50 @@ class NavigationSurvey extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: screenHeight * 0.04),
+            SizedBox(height: SpacingUtil.spacingHeight32(context)),
             Center(
               child: Image.asset(
-                'assets/images/splash/female_doctor_navigation_survey.jpg',
-                height: screenHeight * 0.4,
-                width: screenWidth * 0.8,
-                fit: BoxFit.contain,
+                'assets/images/splash/doctor_navigation_survey.png',
               ),
             ),
-            SizedBox(height: screenHeight * 0.03),
+            SizedBox(height: SpacingUtil.spacingHeight24(context)),
             Text(
               'Bạn đã có hồ sơ điện tử tại viện K chưa?',
               style: TextStyleCustom.heading_2a
                   .copyWith(color: PrimaryColor.primary_10),
             ),
             Spacer(),
-            Padding(
-              padding: EdgeInsets.only(bottom: screenHeight * 0.025),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      type: ButtonType.standard,
-                      state: ButtonState.outline,
-                      text: 'Chưa có',
-                      width: double.infinity,
-                      height: screenHeight * 0.06,
-                      onPressed: () {
-                        Navigator.pushNamed(context, MediaidRoutes.patientGroup);
-                      },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        type: ButtonType.standard,
+                        state: ButtonState.outline,
+                        text: 'Chưa có',
+                        width: double.infinity,
+                        height: SpacingUtil.spacingHeight56(context),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, MediaidRoutes.registration);
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(width: screenWidth * 0.02),
-                  Expanded(
-                    child: CustomButton(
-                      type: ButtonType.standard,
-                      state: ButtonState.fill1,
-                      text: 'Đã có',
-                      width: double.infinity,
-                      height: screenHeight * 0.06,
-                      onPressed: () {
-                        Navigator.pushNamed(context, MediaidRoutes.logIn);
-                      },
-                    ),
-                  )
-                ],
-              ),
-            )
+                    SizedBox(width: SpacingUtil.spacingWidth12(context)),
+                    Expanded(
+                      child: CustomButton(
+                        type: ButtonType.standard,
+                        state: ButtonState.fill1,
+                        text: 'Đã có',
+                        width: double.infinity,
+                        height: SpacingUtil.spacingHeight56(context),
+                        onPressed: () {
+                          Navigator.pushNamed(context, MediaidRoutes.logIn);
+                        },
+                      ),
+                    )
+                  ],
+                ),
           ]),
         ));
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
+import 'package:mediaid/util/spacingStandards.dart';
 
 class MedicalInformationCard extends StatelessWidget{
   final String svgAssetPath;
@@ -13,6 +14,7 @@ class MedicalInformationCard extends StatelessWidget{
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
+    final iconSize = IconSizeUtil();
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -22,7 +24,7 @@ class MedicalInformationCard extends StatelessWidget{
         elevation: 4.0,
         color: PrimaryColor.primary_00,
         child: Container(
-          height: screenHeight * 0.15,
+          padding: EdgeInsets.symmetric(horizontal: SpacingUtil.spacingWidth8(context), vertical: SpacingUtil.spacingHeight16(context)),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -41,13 +43,13 @@ class MedicalInformationCard extends StatelessWidget{
                     child: Center(
                       child: SvgPicture.asset(
                         svgAssetPath,
-                        width: screenWidth * 0.07,
-                        height: screenHeight * 0.03,
+                        width: iconSize.largeIcon(context),
+                        // height: screenHeight * 0.03,
                       ),
                     )
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.01),
+                SizedBox(height: SpacingUtil.spacingHeight8(context)),
                 Text(
                   label,
                   textAlign: TextAlign.center,

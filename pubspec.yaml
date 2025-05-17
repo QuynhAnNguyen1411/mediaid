@@ -43,6 +43,7 @@ dependencies:
   hive: ^2.2.3
   google_nav_bar: ^5.0.7
   get: ^4.7.2
+  percent_indicator: ^4.2.4
 
 
 
@@ -74,8 +75,6 @@ flutter:
   assets:
     - assets/logo/national_cancer_hospital_logo.jpg
     - assets/images/registration/vietnam_flag.jpg
-    - assets/images/splash/male_doctor_medical_facility.jpg
-    - assets/images/splash/female_doctor_navigation_survey.jpg
     - assets/images/log_in/doctor_log_in.jpg
     - assets/icons/home/cancer_screening.svg
     - assets/icons/home/disease_conclusion.svg
@@ -141,7 +140,18 @@ flutter:
     - assets/icons/setExaminationNumber/back-woman/neck-back-woman.svg
     - assets/icons/setExaminationNumber/back-woman/right-foot-back-woman.svg
     - assets/icons/setExaminationNumber/back-woman/right-hand-back-woman.svg
-
+    - assets/images/setExaminationNumber/clinic_suggestions.png
+    - assets/icons/setExaminationNumber/history_orders.svg
+    - assets/images/setExaminationNumber/doctor_image.jpg
+    - assets/images/setExaminationNumber/floor1_map.jpg
+    - assets/icons/setExaminationNumber/medical-facility.svg
+    - assets/images/splash/bg.png
+    - assets/images/splash/doctor_group.png
+    - assets/images/splash/hospital.png
+    - assets/images/splash/doctor_navigation_survey.png
+    - assets/icons/home/cancer.png
+    - assets/icons/home/stethoscope 2.png
+    - assets/icons/logout/logout.svg
 
 
   fonts:
