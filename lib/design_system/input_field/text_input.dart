@@ -6,6 +6,8 @@ import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/design_system/color/status_color.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 
+import '../../util/spacingStandards.dart';
+
 enum TextFieldType { text, textHelper, textIconRight, textIconRightHelper }
 
 enum TextFieldState { defaultState, error, success, entered, disabled }
@@ -53,24 +55,27 @@ class CustomTextInput extends StatelessWidget {
     bool isDisabled = state == TextFieldState.disabled;
     Color borderColor = _getBorderColor();
     Color textColor =
-        isDisabled ? NeutralColor.neutral_04 : NeutralColor.neutral_10;
+    isDisabled ? NeutralColor.neutral_06 : NeutralColor.neutral_10;
     Color helperColor = _getHelperColor();
-    final GlobalKey textFieldKey = GlobalKey();  // GlobalKey để truy cập TextField's size
+    // final GlobalKey textFieldKey = GlobalKey();  // GlobalKey để truy cập TextField's size
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) _buildLabel(context),
-        SizedBox(height: screenHeight * 0.01),
+        SizedBox(height: SpacingUtil.spacingHeight12(context)),
 
         TextField(
-          // key: textFieldKey,  // Gán key cho TextField
           controller: controller,
           obscureText: obscureText,
           enabled: !isDisabled,
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: SpacingUtil.spacingWidth12(context),
+              vertical: SpacingUtil.spacingHeight16(context),
+            ),
             hintText: hintText,
             hintStyle: TextStyleCustom.bodySmall.copyWith(
               color: NeutralColor.neutral_06,
@@ -91,14 +96,14 @@ class CustomTextInput extends StatelessWidget {
             errorText: state == TextFieldState.error ? errorMessage : null,
             filled: true,
             fillColor:
-                isDisabled ? NeutralColor.neutral_01 : PrimaryColor.primary_00,
+            isDisabled ? NeutralColor.neutral_01 : PrimaryColor.primary_00,
           ),
-          style: TextStyleCustom.bodySmall.copyWith(color: textColor),
+          style: TextStyleCustom.bodyLarge.copyWith(color: textColor),
         ),
         if (type == TextFieldType.textHelper ||
             type == TextFieldType.textIconRightHelper)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: EdgeInsets.only(top: SpacingUtil.spacingHeight8(context)),
             child: Text(
               helperText ?? '',
               style: TextStyleCustom.bodySmall.copyWith(color: helperColor),
@@ -111,42 +116,36 @@ class CustomTextInput extends StatelessWidget {
   Widget _buildLabel(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
+    final iconSize = IconSizeUtil();
     return LayoutBuilder(
       builder: (context, constraints){
-        // Lấy chiều rộng của TextField từ LayoutBuilder constraints
-        double labelWidth = constraints.maxWidth;
-        return Wrap(
-          alignment: WrapAlignment.start,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: labelWidth),
-              child: Row(
-                children: [
-                  Flexible(child: Text(
-                    label ?? '',
-                    style: TextStyleCustom.heading_3b
-                        .copyWith(color: PrimaryColor.primary_10),
-                    overflow: TextOverflow.clip,
-                    softWrap: true,
-                  ),
-                  ),
-                  if (isRequired)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8), // Cách 8px
-                      child: Text(
-                        ' *',
-                        style: TextStyle(color: StatusColor.errorFull),
-                      ),
+            Row(
+              children: [
+                Text(
+                  label ?? '',
+                  style: TextStyleCustom.heading_3b
+                      .copyWith(color: PrimaryColor.primary_10),
+                  overflow: TextOverflow.clip,
+                  softWrap: true,
+                ),
+                if (isRequired)
+                  Padding(
+                    padding: EdgeInsets.only(left: SpacingUtil.spacingWidth8(context),),
+                    child: Text(
+                      '*',
+                      style: TextStyle(color: StatusColor.errorFull),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
             if (iconLabel != null)
               GestureDetector(
                 onTap: onTapIconLabel,
                 child: SizedBox(
-                  width: screenWidth * 0.06,
-                  height: screenHeight * 0.03,
+                  width: iconSize.mediumIcon(context),
                   child: iconLabel,
                 ),
               ),
@@ -202,3 +201,4 @@ class CustomTextInput extends StatelessWidget {
         : NeutralColor.neutral_10;
   }
 }
+

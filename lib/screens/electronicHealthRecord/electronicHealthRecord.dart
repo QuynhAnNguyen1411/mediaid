@@ -4,10 +4,12 @@ import 'package:mediaid/design_system/color/neutral_color.dart';
 import 'package:mediaid/design_system/color/primary_color.dart';
 import 'package:mediaid/screens/electronicHealthRecord/personalInformation/personalInformation.dart';
 import '../../design_system/textstyle/textstyle.dart';
-import 'medicalRecord/medicalRecord.dart';
+import '../../util/spacingStandards.dart';
+import 'medicalRecord/generalRecordList.dart';
 
 class ElectronicHealthRecord extends StatefulWidget {
-  const ElectronicHealthRecord({super.key});
+  final int initialIndex;
+  const ElectronicHealthRecord({super.key, this.initialIndex = 0});
 
   @override
   State<StatefulWidget> createState() {
@@ -22,17 +24,20 @@ class _ElectronicHealthRecord extends State<ElectronicHealthRecord>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
+    final iconSize = IconSizeUtil();
     return Scaffold(
       backgroundColor: PrimaryColor.primary_00,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.035, vertical: screenHeight * 0.02),
+        padding: EdgeInsets.symmetric(
+            horizontal: SpacingUtil.spacingWidth16(context),
+            vertical: SpacingUtil.spacingHeight24(context)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -43,13 +48,12 @@ class _ElectronicHealthRecord extends State<ElectronicHealthRecord>
                   Text('Quản lý sổ khám điện tử', style: TextStyleCustom.heading_2a.copyWith(color: PrimaryColor.primary_10),),
                   SvgPicture.asset(
                     'assets/icons/home/notification.svg',
-                    width: screenWidth * 0.06,
-                    height: screenHeight * 0.04,
+                    width: iconSize.largeIcon(context),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: screenHeight * 0.02),
+            SizedBox(height: SpacingUtil.spacingHeight16(context)),
             TabBar(
               controller: _tabController,
               tabs: [
@@ -65,13 +69,13 @@ class _ElectronicHealthRecord extends State<ElectronicHealthRecord>
               unselectedLabelStyle: TextStyleCustom.heading_3b
                   .copyWith(color: NeutralColor.neutral_04),
             ),
-            SizedBox(height: screenHeight * 0.02),
+            SizedBox(height: SpacingUtil.spacingHeight16(context)),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
                 children: [
                   PersonalInformation(),
-                  MedicalRecord(),
+                  GeneralRecordList(),
                 ],
               ),
             ),
