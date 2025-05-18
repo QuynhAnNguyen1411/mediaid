@@ -75,7 +75,7 @@ class _SymptomSurveyState extends State<SymptomSurvey> {
           duration: Duration(seconds: 2),
         ),
       );
-    } else if (lichSuKhamID != null) {
+    } else if (lichSuKhamID != null && lichSuKhamID != "") {
       Navigator.push(
         context,
         MaterialPageRoute(

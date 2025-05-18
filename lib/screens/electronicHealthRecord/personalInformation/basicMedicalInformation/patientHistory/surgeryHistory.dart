@@ -957,7 +957,7 @@ class _SurgeryHistoryState extends State<SurgeryHistory>
                           Expanded(
                             child: CustomButton(
                               type: ButtonType.standard,
-                              state: ButtonState.fill2,
+                              state: ButtonState.outline,
                               text: 'Xóa thông tin',
                               width: double.infinity,
                               height: SpacingUtil.spacingHeight56(context),

@@ -34,10 +34,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   int currentIndexTab = 0;
 
-  List<Widget> pages = [
-    Home(),
-    ElectronicHealthRecord(initialIndex: 0),
-  ];
+  // List<Widget> pages = [
+  //   Home(),
+  //   ElectronicHealthRecord(initialIndex: 0),
+  //
+  // ];
 
   @override
   Widget build(BuildContext context) {

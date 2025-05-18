@@ -252,7 +252,7 @@ class _FemaleBodyState extends State<FemaleBody> {
             duration: Duration(seconds: 2),
           ),
         );
-      } else if (lichSuKhamID != null) {
+      } else if (lichSuKhamID != null && lichSuKhamID != "") {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -386,7 +386,7 @@ class _FemaleBodyState extends State<FemaleBody> {
           ),
         );
         Navigator.pop(context);
-      } else if (lichSuKhamID != null) {
+      } else if (lichSuKhamID != null && lichSuKhamID != "") {
         Navigator.push(
           context,
           MaterialPageRoute(

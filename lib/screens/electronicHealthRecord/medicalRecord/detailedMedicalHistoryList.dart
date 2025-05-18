@@ -108,16 +108,16 @@ class _DetailedRecordListState extends State<DetailedRecordList> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(screenHeight * 0.08),
         child: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              // Điều hướng về màn hình bạn muốn
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => ElectronicHealthRecord(initialIndex: 1),)
-              );
-            },
-          ),
+          // leading: IconButton(
+          //   icon: Icon(Icons.arrow_back),
+          //   onPressed: () {
+          //     // Điều hướng về màn hình bạn muốn
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(builder: (_) => ElectronicHealthRecord(initialIndex: 1),)
+          //     );
+          //   },
+          // ),
           title: Text(
             'Chi tiết lịch sử khám',
             style: TextStyleCustom.heading_2a

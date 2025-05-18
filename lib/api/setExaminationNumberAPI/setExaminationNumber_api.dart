@@ -92,11 +92,13 @@ class SetExamNumberApi {
       var data = json.decode(responseBody);
       print(responseBody);
       if (response.statusCode == 200) {
+        print("response.statusCode == 200");
         if (data["lichSuKhamID"] != null) {
           return data["lichSuKhamID"];
         }
       } else {
-        if (data["message"] != null) {
+        print("response.statusCode == "+response.statusCode.toString());
+        if (data["message"] != null && data["message"] != "") {
           print(data["message"]);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
