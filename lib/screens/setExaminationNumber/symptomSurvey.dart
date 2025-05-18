@@ -64,8 +64,18 @@ class _SymptomSurveyState extends State<SymptomSurvey> {
       medicalFacilityID: widget.selectedMedicalFacilityID,
       symptomList: selectedSymptoms,
     );
-    String? lichSuKhamID = await SetExamNumberApi().submitInputForChanDoan(form);
-    if (lichSuKhamID != null) {
+    String? lichSuKhamID =
+        await SetExamNumberApi().submitInputForChanDoan(form, context);
+    if (lichSuKhamID == "Xin hãy chọn cơ sở khám") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Xin hãy chọn cơ sở khám trước'),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.fromLTRB(16, 50, 16, 750), // Position at the top
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else if (lichSuKhamID != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -126,17 +136,15 @@ class _SymptomSurveyState extends State<SymptomSurvey> {
                                 onTap: () {
                                   setState(() {
                                     isCheckedList[index] =
-                                    !isCheckedList[index];
+                                        !isCheckedList[index];
                                   });
                                 },
                                 child: Transform.scale(
                                   scale: 1.3,
                                   child: Checkbox(
                                     value: isCheckedList[index],
-                                    activeColor:
-                                    PrimaryColor.primary_05,
-                                    checkColor:
-                                    PrimaryColor.primary_00,
+                                    activeColor: PrimaryColor.primary_05,
+                                    checkColor: PrimaryColor.primary_00,
                                     onChanged: (bool? value) {
                                       setState(() {
                                         isCheckedList[index] = value!;
@@ -155,9 +163,7 @@ class _SymptomSurveyState extends State<SymptomSurvey> {
                                 child: Text(
                                   trieuChungList[index].symptomName,
                                   style: TextStyleCustom.bodySmall
-                                      .copyWith(
-                                        color: PrimaryColor
-                                          .primary_10),
+                                      .copyWith(color: PrimaryColor.primary_10),
                                   overflow: TextOverflow.clip,
                                   softWrap: true,
                                 ),

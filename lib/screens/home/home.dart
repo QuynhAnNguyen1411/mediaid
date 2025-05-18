@@ -6,9 +6,11 @@ import 'package:mediaid/design_system/button/button.dart';
 import 'package:mediaid/design_system/color/status_color.dart';
 import 'package:mediaid/design_system/textstyle/textstyle.dart';
 import '../../api/electronicHealthRecordAPI/medicalRecordAPI/medicalRecord_api.dart';
+import '../../api/setExaminationNumberAPI/medicalFacility_api.dart';
 import '../../design_system/color/neutral_color.dart';
 import '../../design_system/color/primary_color.dart';
 import '../../models/electronicHealthRecordModel/medicalRecordModel/generalRecordForm.dart';
+import '../../models/setExamNumberModel/medicalFacilityModel.dart';
 import '../../util/spacingStandards.dart';
 import '../electronicHealthRecord/electronicHealthRecord.dart';
 import '../electronicHealthRecord/medicalRecord/detailedMedicalHistoryList.dart';
@@ -24,6 +26,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   late Future<List<GeneralRecordForm>> generalRecordCardList;
 
   // Load data
@@ -61,6 +64,8 @@ class _HomeState extends State<Home> {
         return NeutralColor.neutral_05;
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -30,15 +30,14 @@ class MaleBody extends StatefulWidget {
 }
 
 class _MaleBodyState extends State<MaleBody> {
-
   late List<MedicalFacilityModel> medicalFacilityList = [];
 
-  int selectedMedicalFacilityID = 1;
+  int selectedMedicalFacilityID = 0;
 
   Future<void> _getMedicalFacilityData() async {
     try {
       List<MedicalFacilityModel> response =
-      await MedicalFacilityApi.getStaticDataForMedicalFacility();
+          await MedicalFacilityApi.getStaticDataForMedicalFacility();
 
       if (response != null) {
         setState(() {
@@ -53,19 +52,6 @@ class _MaleBodyState extends State<MaleBody> {
       print("❌ Lỗi khi gọi API: $e");
     }
   }
-
-  Future<void> _submitMedicalFacilityData(int selectedMedicalFacilityID) async {
-    var box = await Hive.openBox('loginBox');
-    String accountID = await box.get('accountID');
-    try {
-      await MedicalFacilityApi.submitModelMedicalFacility(
-          selectedMedicalFacilityID);
-      print('Dữ liệu Cơ sở khám bệnh đã được gửi thành công.');
-    } catch (e) {
-      print('Có lỗi xảy ra khi gửi dữ liệu Cơ sở khám bệnh: $e');
-    }
-  }
-
 
   List<String> bodyPartsFrontMan = [
     'assets/icons/setExaminationNumber/front-man/head-front-man.svg',
@@ -123,8 +109,8 @@ class _MaleBodyState extends State<MaleBody> {
 
   late List<BodyPart2Model> bodyPart2Process;
 
-
-  Future<void> toggleColor(String bodyPart1, bool frontOrBack, bool? leftOrRight) async {
+  Future<void> toggleColor(
+      String bodyPart1, bool frontOrBack, bool? leftOrRight) async {
     if (kDebugMode) {
       print("Danh sach phan vung chua ID $bodyPart1");
     }
@@ -246,21 +232,34 @@ class _MaleBodyState extends State<MaleBody> {
         return;
     }
     print("Lay danh sach bo phan 2 cho id " + bodyPart1);
-    List<BodyPart2Model>? result = await SetExamNumberApi().findBodyPart2Models(
-        bodyPart1, _bodyPartsData);
+    List<BodyPart2Model>? result =
+        await SetExamNumberApi().findBodyPart2Models(bodyPart1, _bodyPartsData);
     if (result == null) {
       var box = await Hive.openBox('loginBox');
       String accountID = await box.get('accountID');
-      DiagnoseModel diagnoseModel = new DiagnoseModel(accountID: accountID,
+      DiagnoseModel diagnoseModel = new DiagnoseModel(
+          accountID: accountID,
           bodyPart1ID: bodyPart1,
           medicalFacilityID: selectedMedicalFacilityID);
-      String? lichSuKhamID = await SetExamNumberApi().submitInputForChanDoan(
-          diagnoseModel);
-      if (lichSuKhamID != null) {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) =>
-              DetailedRecordList(detailedRecordID: lichSuKhamID),
-        ),);
+      String? lichSuKhamID = await SetExamNumberApi()
+          .submitInputForChanDoan(diagnoseModel, context);
+      if (lichSuKhamID == "Xin hãy chọn cơ sở khám") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Xin hãy chọn cơ sở khám'),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.fromLTRB(16, 50, 16, 750), // Position at the top
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else if (lichSuKhamID != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                DetailedRecordList(detailedRecordID: lichSuKhamID),
+          ),
+        );
       }
       return;
     }
@@ -269,128 +268,149 @@ class _MaleBodyState extends State<MaleBody> {
     _showBodyPart2List(result);
   }
 
+  Future<void> chooseMedicalFacility(int medicalFacilityID) async {
+    print("medicalFacilityID");
+    print(medicalFacilityID);
+    selectedMedicalFacilityID = medicalFacilityID;
+    Navigator.pop(context);
+  }
 
-  void _showMedicalFacility(BuildContext context) {
-    var screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double iconSize = screenWidth * 0.08;
-    showDialog(context: context, builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: PrimaryColor.primary_00,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Chọn cơ sở khám ',
-              style: TextStyleCustom.heading_3a
-                  .copyWith(color: PrimaryColor.primary_10),
+  void _showMedicalFacility(List<MedicalFacilityModel> medicalFacilityList) {
+    showModalBottomSheet(
+      backgroundColor: PrimaryColor.primary_00,
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        var screenWidth = MediaQuery.of(context).size.width;
+        var screenHeight = MediaQuery.of(context).size.height;
+        return Container(
+            padding: EdgeInsets.fromLTRB(screenWidth * 0.04,
+                screenHeight * 0.04, screenWidth * 0.04, screenHeight * 0.02),
+            decoration: BoxDecoration(
+              color: PrimaryColor.primary_00,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close,
-                    size: iconSize, color: StatusColor.errorFull)),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: SizedBox(
-            width: screenWidth * 0.8,
-            height: screenHeight * 0.3,
-            child: ListView.builder(
-                itemCount: medicalFacilityList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var medicalFacilityData = medicalFacilityList[index];
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomRadioButton(
-                        isSelected: selectedMedicalFacilityID ==
-                            medicalFacilityData.medicalFacilityID,
-                        isDisabled: false,
-                        label: medicalFacilityData.medicalFacilityName,
-                        onChanged: (selected) {
-                          setState(() {
-                            if (selected) {
-                              selectedMedicalFacilityID =
-                                  medicalFacilityData.medicalFacilityID ?? 1;
-                            } else {
-                              selectedMedicalFacilityID = 1;
-                            }
-                          });
-                        },
-                      )
+                      Text(
+                        'Chọn cơ sở khám bệnh',
+                        style: TextStyleCustom.heading_3b
+                            .copyWith(color: PrimaryColor.primary_10),
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Text(
+                          'Hủy',
+                          style: TextStyleCustom.bodyLarge
+                              .copyWith(color: StatusColor.informationFull),
+                        ),
+                      ),
                     ],
-                  );
-                }),
-          ),
-        ),
-        actions: <Widget>[
-          CustomButton(
-            type: ButtonType.standard,
-            state: selectedMedicalFacilityID == null
-                ? ButtonState.disabled
-                : ButtonState.fill1,
-            width: screenWidth * 0.15,
-            height: screenHeight * 0.06,
-            text: 'Tiếp tục',
-            onPressed: selectedMedicalFacilityID == null
-                ? null
-                : () {
-              _submitMedicalFacilityData(selectedMedicalFacilityID!);
-              Navigator.pop(context);
-            },
-          )
-        ],
-      );
-    });
+                  ),
+                  SizedBox(height: screenHeight * 0.015),
+                  Divider(
+                    color: NeutralColor.neutral_05,
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: medicalFacilityList.length,
+                    itemBuilder: (context, index) {
+                      MedicalFacilityModel medicalFacility =
+                          medicalFacilityList[index];
+                      return ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              medicalFacility.medicalFacilityName,
+                              style: TextStyleCustom.bodyLarge
+                                  .copyWith(color: PrimaryColor.primary_10),
+                            ),
+                            // Hiển thị tên phần cơ thể
+                            Icon(Icons.arrow_forward_ios, size: 16),
+                            // Dấu mũi tên
+                          ],
+                        ),
+                        onTap: () async {
+                          print(medicalFacility.toJson());
+                          chooseMedicalFacility(
+                              medicalFacility.medicalFacilityID);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ));
+      },
+    );
   }
 
   List<BodyPart1Model> _bodyPartsData = [];
 
-  Future<void> _navigateToChooseSymptomScreen(BuildContext context, BodyPart2Model bodyPart2Model) async {
+  Future<void> _navigateToChooseSymptomScreen(
+      BuildContext context, BodyPart2Model bodyPart2Model) async {
     List<SymptomModel>? symptomModels = await SetExamNumberApi()
         .findSymptomModels(bodyPart2Model.bodyPart2ID, bodyPart2Process);
 
     if (symptomModels != null) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SymptomSurvey(
-            bodyPart2ID: bodyPart2Model.bodyPart2ID,
-            SymptomModels: symptomModels,
-            selectedMedicalFacilityID: selectedMedicalFacilityID)),
+        MaterialPageRoute(
+            builder: (context) => SymptomSurvey(
+                bodyPart2ID: bodyPart2Model.bodyPart2ID,
+                SymptomModels: symptomModels,
+                selectedMedicalFacilityID: selectedMedicalFacilityID)),
       );
     } else {
       var box = await Hive.openBox('loginBox');
       String accountID = await box.get('accountID');
-      DiagnoseModel diagnoseModel = new DiagnoseModel(accountID: accountID,
+      DiagnoseModel diagnoseModel = new DiagnoseModel(
+          accountID: accountID,
           bodyPart2ID: bodyPart2Model.bodyPart2ID,
           medicalFacilityID: selectedMedicalFacilityID);
-      String? lichSuKhamID = await SetExamNumberApi().submitInputForChanDoan(diagnoseModel);
-      if (lichSuKhamID != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailedRecordList(detailedRecordID: lichSuKhamID),),);
+      String? lichSuKhamID = await SetExamNumberApi()
+          .submitInputForChanDoan(diagnoseModel, context);
+      if (lichSuKhamID == "Xin hãy chọn cơ sở khám") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Xin hãy chọn cơ sở khám'),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.fromLTRB(16, 50, 16, 750),
+            // Position at the top
+            duration: Duration(seconds: 2),
+          ),
+        );
+        Navigator.pop(context);
+      } else if (lichSuKhamID != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                DetailedRecordList(detailedRecordID: lichSuKhamID),
+          ),
+        );
       }
       return;
     }
   }
+
   // Hàm tải dữ liệu từ API
   Future<void> _loadBodyPartsData() async {
     var box = await Hive.openBox('loginBox');
-    String? accountID = await box.get(
-        'accountID'); // Lấy giá trị accountID từ Hive
+    String? accountID =
+        await box.get('accountID'); // Lấy giá trị accountID từ Hive
     try {
       if (accountID == null) {
         return;
       }
-      List<BodyPart1Model> response = await SetExamNumberApi().fetchBodyParts(
-          accountID); // Gọi API và truyền accountID
+      List<BodyPart1Model> response = await SetExamNumberApi()
+          .fetchBodyParts(accountID); // Gọi API và truyền accountID
       print("_loadBodyPartsData ");
       print(response);
       setState(() {
@@ -407,14 +427,8 @@ class _MaleBodyState extends State<MaleBody> {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        var screenWidth = MediaQuery
-            .of(context)
-            .size
-            .width;
-        var screenHeight = MediaQuery
-            .of(context)
-            .size
-            .height;
+        var screenWidth = MediaQuery.of(context).size.width;
+        var screenHeight = MediaQuery.of(context).size.height;
         return Container(
             padding: EdgeInsets.fromLTRB(screenWidth * 0.04,
                 screenHeight * 0.04, screenWidth * 0.04, screenHeight * 0.02),
@@ -458,9 +472,11 @@ class _MaleBodyState extends State<MaleBody> {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(bodyPart1.bodyPart1Name,
-                              style: TextStyleCustom.bodyLarge.copyWith(
-                                  color: PrimaryColor.primary_10),),
+                            Text(
+                              bodyPart1.bodyPart1Name,
+                              style: TextStyleCustom.bodyLarge
+                                  .copyWith(color: PrimaryColor.primary_10),
+                            ),
                             // Hiển thị tên phần cơ thể
                             Icon(Icons.arrow_forward_ios, size: 16),
                             // Dấu mũi tên
@@ -472,7 +488,6 @@ class _MaleBodyState extends State<MaleBody> {
                       );
                     },
                   ),
-
                 ],
               ),
             ));
@@ -481,25 +496,20 @@ class _MaleBodyState extends State<MaleBody> {
   }
 
   // Hàm tìm kiếm và xử lý
-  BodyPart1Model? findBodyPart1ById(List<BodyPart1Model> bodyPart1List,
-      String bodyPart1ID) {
-    return bodyPart1List.firstWhere((bodyPart1) =>
-    bodyPart1.bodyPart1ID == bodyPart1ID);
+  BodyPart1Model? findBodyPart1ById(
+      List<BodyPart1Model> bodyPart1List, String bodyPart1ID) {
+    return bodyPart1List
+        .firstWhere((bodyPart1) => bodyPart1.bodyPart1ID == bodyPart1ID);
   }
+
   void _showBodyPart2List(List<BodyPart2Model> bodyPart2List) {
     showModalBottomSheet(
       backgroundColor: PrimaryColor.primary_00,
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        var screenWidth = MediaQuery
-            .of(context)
-            .size
-            .width;
-        var screenHeight = MediaQuery
-            .of(context)
-            .size
-            .height;
+        var screenWidth = MediaQuery.of(context).size.width;
+        var screenHeight = MediaQuery.of(context).size.height;
         return Container(
             padding: EdgeInsets.fromLTRB(screenWidth * 0.04,
                 screenHeight * 0.04, screenWidth * 0.04, screenHeight * 0.02),
@@ -524,8 +534,6 @@ class _MaleBodyState extends State<MaleBody> {
                         child: Text(
                           'Hủy',
                           style: TextStyleCustom.bodyLarge
-
-
                               .copyWith(color: StatusColor.informationFull),
                         ),
                       ),
@@ -552,8 +560,8 @@ class _MaleBodyState extends State<MaleBody> {
                                 ),
                                 child: Text(
                                   bodyPart2.bodyPart2Name,
-                                  style: TextStyleCustom.bodyLarge.copyWith(
-                                      color: PrimaryColor.primary_10),
+                                  style: TextStyleCustom.bodyLarge
+                                      .copyWith(color: PrimaryColor.primary_10),
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -570,8 +578,7 @@ class _MaleBodyState extends State<MaleBody> {
                   ),
                 ],
               ),
-            )
-        );
+            ));
       },
     );
   }
@@ -583,7 +590,6 @@ class _MaleBodyState extends State<MaleBody> {
     _loadBodyPartsData();
   }
 
-
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -592,7 +598,9 @@ class _MaleBodyState extends State<MaleBody> {
     return Scaffold(
       backgroundColor: PrimaryColor.primary_00,
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: SpacingUtil.spacingWidth16(context), vertical: SpacingUtil.spacingHeight24(context)),
+        padding: EdgeInsets.symmetric(
+            horizontal: SpacingUtil.spacingWidth16(context),
+            vertical: SpacingUtil.spacingHeight24(context)),
         child: Stack(
           children: [
             SafeArea(
@@ -608,7 +616,7 @@ class _MaleBodyState extends State<MaleBody> {
                       ),
                       IconButton(
                         onPressed: () {
-                          _showMedicalFacility(context);
+                          _showMedicalFacility(medicalFacilityList);
                         },
                         icon: SvgPicture.asset(
                           'assets/icons/setExaminationNumber/medical-facility.svg',
@@ -619,284 +627,300 @@ class _MaleBodyState extends State<MaleBody> {
                   ),
                   _isFront
                       ? LayoutBuilder(builder: (context, constraints) {
-                      return Center(
-                        child: Stack(
-                          children: [
-                            Image.asset(
-                              "assets/images/setExaminationNumber/front-male-body.png",
-                              fit: BoxFit.cover,
-                            ),
-                            Positioned(
-                              left: 122.75,
-                              top: 23.02,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_1", true, null);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[0],
-                                  color: isHeadFrontSelected
-                                      ? StatusColor.informationBackground
-                                      : Colors.transparent,
+                          return Center(
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  "assets/images/setExaminationNumber/front-male-body.png",
+                                  fit: BoxFit.cover,
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 126.82,
-                              top: 89.71,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_3", true, null);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[1],
-                                  color: isNeckFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 122.75,
+                                  top: 23.02,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_1", true, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[0],
+                                      color: isHeadFrontSelected
+                                          ? StatusColor.informationBackground
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 96.57,
-                              top: 114.5,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_4", true, null);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[2],
-                                  color: isChestFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 126.82,
+                                  top: 89.71,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_3", true, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[1],
+                                      color: isNeckFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 103.35,
-                              top: 180.97,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_6", true, null);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[3],
-                                  color: isAbdomenFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 96.57,
+                                  top: 114.5,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_4", true, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[2],
+                                      color: isChestFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 25.97,
-                              top: 124.2,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_5", true, true);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[4],
-                                  color: isLeftHandFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 103.35,
+                                  top: 180.97,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_6", true, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[3],
+                                      color: isAbdomenFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 202.41,
-                              top: 126.96,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_5", true, false);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[5],
-                                  color: isRightHandFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 25.97,
+                                  top: 124.2,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_5", true, true);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[4],
+                                      color: isLeftHandFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 101.4,
-                              top: 281.76,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_7", true, null);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[6],
-                                  color: isMaleGenitaliaFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 202.41,
+                                  top: 126.96,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_5", true, false);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[5],
+                                      color: isRightHandFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 95.99,
-                              top: 310.42,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_10", true, true);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[7],
-                                  color: isLeftFootFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 101.4,
+                                  top: 281.76,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_7", true, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[6],
+                                      color: isMaleGenitaliaFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 156.13,
-                              top: 304.61,
-                              child: GestureDetector(
-                                onTap: () {
-                                  toggleColor("pv_10", true, false);
-                                },
-                                child: SvgPicture.asset(
-                                  bodyPartsFrontMan[8],
-                                  color: isRightFootFrontSelected
-                                      ? PrimaryColor.primary_01.withOpacity(0.5)
-                                      : Colors.transparent,
+                                Positioned(
+                                  left: 95.99,
+                                  top: 310.42,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_10", true, true);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[7],
+                                      color: isLeftFootFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Positioned(
+                                  left: 156.13,
+                                  top: 304.61,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_10", true, false);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsFrontMan[8],
+                                      color: isRightFootFrontSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    })
+                          );
+                        })
                       : LayoutBuilder(builder: (context, constraints) {
-                    return Center(
-                      child: Stack(
-                        children: [
-                          Image.asset(
-                            "assets/images/setExaminationNumber/back-male-body.png",
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            left: 127.27,
-                            top: 10.18,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_1", false, null);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[0],
-                                color: isHeadBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
+                          return Center(
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  "assets/images/setExaminationNumber/back-male-body.png",
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  left: 127.27,
+                                  top: 10.18,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_1", false, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[0],
+                                      color: isHeadBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 133.04,
+                                  top: 77.54,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_2", false, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[1],
+                                      color: isNeckBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 100.14,
+                                  top: 95.67,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_8", false, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[2],
+                                      color: isBackBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 31.84,
+                                  top: 110.17,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_5", false, true);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[3],
+                                      color: isLeftHandBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 215.65,
+                                  top: 110.14,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_5", false, false);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[4],
+                                      color: isRightHandBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 102.56,
+                                  top: 278.99,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_9", false, null);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[5],
+                                      color: isMaleButtBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 100.28,
+                                  top: 326.15,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_10", false, true);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[6],
+                                      color: isLeftFootBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 161.04,
+                                  top: 324.59,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      toggleColor("pv_10", false, false);
+                                    },
+                                    child: SvgPicture.asset(
+                                      bodyPartsBackMan[7],
+                                      color: isRightFootBackSelected
+                                          ? PrimaryColor.primary_01
+                                              .withOpacity(0.5)
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Positioned(
-                            left: 133.04,
-                            top: 77.54,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_2", false, null);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[1],
-                                color: isNeckBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 100.14,
-                            top: 95.67,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_8", false, null);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[2],
-                                color: isBackBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 31.84,
-                            top: 110.17,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_5", false, true);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[3],
-                                color: isLeftHandBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 215.65,
-                            top: 110.14,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_5", false, false);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[4],
-                                color: isRightHandBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 102.56,
-                            top: 278.99,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_9", false, null);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[5],
-                                color: isMaleButtBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 100.28,
-                            top: 326.15,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_10", false, true);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[6],
-                                color: isLeftFootBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 161.04,
-                            top: 324.59,
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleColor("pv_10", false, false);
-                              },
-                              child: SvgPicture.asset(
-                                bodyPartsBackMan[7],
-                                color: isRightFootBackSelected
-                                    ? PrimaryColor.primary_01.withOpacity(0.5)
-                                    : Colors.transparent,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  })
+                          );
+                        })
                 ],
               ),
             ),

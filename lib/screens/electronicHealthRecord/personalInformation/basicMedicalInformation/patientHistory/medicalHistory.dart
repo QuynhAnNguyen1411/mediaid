@@ -1008,6 +1008,7 @@ class _MedicalHistoryState extends State<MedicalHistory> {
                               onPressed: isMedicalHistoryValid
                                   ? () {
                                       _submitFormMedicalHistory();
+                                      Navigator.pop(context);
                                     }
                                   : null,
                             ),

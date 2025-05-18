@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class MedicalFacilityModel {
-  final int? medicalFacilityID;
+  final int medicalFacilityID;
   final String medicalFacilityName;
   final String medicalFacilityAddress;
 

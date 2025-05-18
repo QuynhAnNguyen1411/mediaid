@@ -624,6 +624,7 @@ class _GeneticDiseaseHistoryState extends State<GeneticDiseaseHistory> {
                             height: SpacingUtil.spacingHeight56(context),
                             onPressed: isFamilyHistoryValid ? () {
                               _submitFormGeneticDiseaseHistory();
+                              Navigator.pop(context);
                             } : null,
                           ),
                         )

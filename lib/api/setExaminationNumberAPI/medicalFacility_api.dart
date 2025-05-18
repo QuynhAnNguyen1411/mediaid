@@ -11,10 +11,10 @@ class MedicalFacilityApi {
       try {
         String responseBody = utf8.decode(response.bodyBytes);
         List<dynamic> dataList = jsonDecode(responseBody);
-        // print(dataList);
+        print(dataList);
 
         return dataList.map((json) => MedicalFacilityModel(
-            medicalFacilityID: json['CoSoID'],
+            medicalFacilityID: json['coSoID'],
             medicalFacilityName: json['ten'],
             medicalFacilityAddress: json['diaChi'],
         )).toList();
@@ -28,20 +28,20 @@ class MedicalFacilityApi {
   }
 
 
-  static Future<void> submitModelMedicalFacility(int selectedMedicalFacilityID) async {
-    final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: json.encode({'selectedMedicalFacilityID': selectedMedicalFacilityID}),
-    );
-    if (response.statusCode == 200) {
-      // Xử lý khi gửi thành công
-      print('Dữ liệu đã được gửi thành công!');
-    } else {
-      // Xử lý khi có lỗi
-      print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
-    }
-  }
+  // static Future<void> submitModelMedicalFacility(int selectedMedicalFacilityID) async {
+  //   final response = await http.post(
+  //     Uri.parse('http://10.0.2.2:8080/capNhatTieuSuBenhTat'),
+  //     headers: {
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: json.encode({'selectedMedicalFacilityID': selectedMedicalFacilityID}),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     // Xử lý khi gửi thành công
+  //     print('Dữ liệu đã được gửi thành công!');
+  //   } else {
+  //     // Xử lý khi có lỗi
+  //     print('Gửi dữ liệu thất bại, mã lỗi: ${response.statusCode}');
+  //   }
+  // }
 }

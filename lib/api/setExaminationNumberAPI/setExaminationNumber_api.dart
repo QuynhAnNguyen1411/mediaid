@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediaid/models/setExamNumberModel/bodyPart_1Model.dart';
 import 'package:mediaid/models/setExamNumberModel/bodyPart_2Model.dart';
@@ -31,13 +32,14 @@ class SetExamNumberApi {
     }
   }
 
-  Future<List<BodyPart2Model>?> findBodyPart2Models(String bodyPart1ID, List<BodyPart1Model>? bodyPart) async {
+  Future<List<BodyPart2Model>?> findBodyPart2Models(
+      String bodyPart1ID, List<BodyPart1Model>? bodyPart) async {
     try {
       if (bodyPart == null) {
         return null;
       }
-      BodyPart1Model bodyPart1 = bodyPart
-          .firstWhere((e) => e.bodyPart1ID == bodyPart1ID);
+      BodyPart1Model bodyPart1 =
+          bodyPart.firstWhere((e) => e.bodyPart1ID == bodyPart1ID);
 
       List<BodyPart2Model>? bodyPart2s = bodyPart1.bodyPart2List;
       if (bodyPart2s == null) {
@@ -49,13 +51,14 @@ class SetExamNumberApi {
     }
   }
 
-  Future<List<SymptomModel>?> findSymptomModels(String bodyPart2ID, List<BodyPart2Model>? bodyPart2Models) async {
+  Future<List<SymptomModel>?> findSymptomModels(
+      String bodyPart2ID, List<BodyPart2Model>? bodyPart2Models) async {
     try {
       if (bodyPart2Models == null) {
         return null;
       }
-      BodyPart2Model result = bodyPart2Models
-          .firstWhere((e) => e.bodyPart2ID == bodyPart2ID);
+      BodyPart2Model result =
+          bodyPart2Models.firstWhere((e) => e.bodyPart2ID == bodyPart2ID);
 
       List<SymptomModel>? symptomModel = result.symptomsList;
       if (symptomModel == null) {
@@ -67,35 +70,45 @@ class SetExamNumberApi {
     }
   }
 
-  Future<String?> submitInputForChanDoan(DiagnoseModel diagnoseModel) async {
+  Future<String?> submitInputForChanDoan(
+      DiagnoseModel diagnoseModel, BuildContext context) async {
+    if (diagnoseModel.medicalFacilityID == 0) {
+      return "Xin hãy chọn cơ sở khám";
+    }
     Map<String, dynamic> toJson() => {
-      'accountID': diagnoseModel.accountID,
-      'medicalFacilityID': diagnoseModel.medicalFacilityID,
-      'bodyPart1ID': diagnoseModel.bodyPart1ID,
-      'bodyPart2ID': diagnoseModel.bodyPart2ID,
-      'symptomList': diagnoseModel.symptomList,  // New key
-    };
-    print ("accountID: "+diagnoseModel.accountID);
-    final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/LaySo'),
+          'accountID': diagnoseModel.accountID,
+          'medicalFacilityID': diagnoseModel.medicalFacilityID,
+          'bodyPart1ID': diagnoseModel.bodyPart1ID,
+          'bodyPart2ID': diagnoseModel.bodyPart2ID,
+          'symptomList': diagnoseModel.symptomList, // New key
+        };
+    print("accountID: " + diagnoseModel.accountID);
+    final response = await http.post(Uri.parse('http://10.0.2.2:8080/LaySo'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(toJson())
-    );
+        body: jsonEncode(toJson()));
     String responseBody = utf8.decode(response.bodyBytes);
     print('Response Body: $responseBody');
     try {
+      var data = json.decode(responseBody);
+      print(responseBody);
       if (response.statusCode == 200) {
-        Map<String, dynamic> data = json.decode(responseBody);
-        print (responseBody);
-        if(data["lichSuKhamID"] != null){
+        if (data["lichSuKhamID"] != null) {
           return data["lichSuKhamID"];
         }
-        if(data["message"] != null){
+      } else {
+        if (data["message"] != null) {
           print(data["message"]);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(data["message"]),
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.fromLTRB(16, 50, 16, 750),
+              // Position at the top
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
         return null;
-      } else {
-        throw Exception('fetchBodyParts Failed to load body parts');
       }
     } catch (e) {
       throw Exception(' fetchBodyParts Error fetching data: $e');
